@@ -1,0 +1,18 @@
+.container {
+  background: linear-gradient(87deg, #11cdef 0, #1171ef 100%) !important;
+  min-height: 50vh;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(172px, 1fr));
+  justify-content: center;
+  grid-gap: 1.5rem;
+  padding: 50px 15px;
+  padding-bottom: 75px;
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}

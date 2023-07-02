@@ -174,6 +174,7 @@ function Home(props) {
           >
             {pathname.split("/")[2]}
           </Typography>
+          
           <Profile />
         </Toolbar>
       </AppBar>

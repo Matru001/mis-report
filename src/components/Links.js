@@ -8,9 +8,14 @@ const Links = () => {
     <div
       style={{
         display: "flex",
+        
         justifyContent: "space-between",
         flexWrap: "wrap",
-        marginLeft: 50
+        marginLeft: 50,
+        gridGap: 50,
+        
+        
+        
       }}
     >
       <div>

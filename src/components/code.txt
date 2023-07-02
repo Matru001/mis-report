@@ -1,0 +1,19 @@
+const authentication= async ()=>{
+    const config={
+        body
+    }
+
+    const body={
+        body(paste)
+    }
+
+    const res= await axios.post("api",body,config)
+    const response= await res.data.status
+
+    if(response==="success"){
+        user=true
+    }
+    else{
+        console.log("wrong")
+    }
+}

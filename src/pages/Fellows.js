@@ -94,8 +94,8 @@ const Fellows = () => {
             <Text name="Select manager" currencies={currencies} />
             <Text name="Select manager-type" currencies={currenciesSet} />
             <Text name="Select passcode" currencies={currencieses} />
-            <Text name="Hello world" currencies={currencies} />
-            <Text name="Hello world" currencies={currencies} />
+            <Text name="Select District" currencies={currencies} />
+            <Text name="Select state" currencies={currencies} />
           </div>
           <div style={{ marginTop: 17, flexWrap: "wrap" }}>
             <Stack spacing={2} direction="row">
@@ -128,7 +128,7 @@ const Fellows = () => {
         <Number Name="Number of Drop-out" count={468} />
       </div>
       <Fields />
-
+ 
       <Links />
     </>
   );

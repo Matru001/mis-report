@@ -146,7 +146,7 @@ const TimeSpendDetails = () => {
             </DemoContainer>
           </LocalizationProvider>
 
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", }}>
             <Text name="Select manager" currencies={currencies} />
             <Text name="Select manager-type" currencies={currenciesSet} />
             <Text name="Select passcode" currencies={currencieses} />

@@ -9,8 +9,13 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Card from "../components/Card";
 import { red } from "@mui/material/colors";
 import Links from "../components/Links";
+const Femalefellows = "http://localhost:3000/home/fellows";
+
+
 
 const Dashboard = () => {
+
+  
   return (
     <>
       <div className="content">
@@ -27,15 +32,40 @@ const Dashboard = () => {
       </div>
       <div className="container">
         <Card name="Youth trained" number={200} Icon={PeopleIcon} />
-        <Card
-          name="Female fellows"
-          number={500}
-          Icon={PeopleIcon}
-          style={{ backgroundColor: "orange" }}
-        />
-        <Card name="Fellowship compeleted" number={700} Icon={PeopleIcon} />
-        <Card name="Active fellows" number={107} Icon={PeopleIcon} />
-        <Card name="Fellowship Dropout" number={1000} Icon={PeopleIcon} />
+        <a
+          style={{ textDecoration: "none" }}
+          href={Femalefellows}
+          target="femailfellowship"
+        >
+          <Card
+            name="Female fellows"
+            number={500}
+            Icon={PeopleIcon}
+            style={{ backgroundColor: "orange" }}
+          />
+        </a>
+
+        <a
+          style={{ textDecoration: "none" }}
+          href={Femalefellows}
+          target="female"
+        >
+          <Card name="Fellowship compeleted" number={700} Icon={PeopleIcon} />
+        </a>
+        <a
+          style={{ textDecoration: "none" }}
+          href={Femalefellows}
+          target="Active fellows"
+        >
+          <Card name="Active fellows" number={107} Icon={PeopleIcon} />
+        </a>
+        <a
+          style={{ textDecoration: "none" }}
+          href={Femalefellows}
+          target="fellowdropout"
+        >
+          <Card name="Fellowship Dropout" number={1000} Icon={PeopleIcon} />
+        </a>
         <Card name="Avrage score" number={400} Icon={PeopleIcon} />
         <Card name="Endline user" number={190} Icon={PeopleIcon} />
         <Card name="Endline score" number={547} Icon={PeopleIcon} />
@@ -71,7 +101,7 @@ const Dashboard = () => {
         <Card name="Schools" number={499} Icon={PeopleIcon} />
         <Card name="Schools" number={231} Icon={PeopleIcon} />
       </div>
-      <Links/>
+      <Links />
     </>
   );
 };

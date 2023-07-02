@@ -1,6 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -29,12 +29,14 @@ import AcUnitIcon from "@mui/icons-material/AcUnit";
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import { pink, yellow } from "@mui/material/colors";
 import LogoutIcon from "@mui/icons-material/Logout";
+import Profile from "./components/Profile";
+// import Profile from "./components/Profile";
 
 const drawerWidth = 240;
 
 function Home(props) {
   const { pathname } = useLocation();
-  console.log("location: ", location);
+  const navigate = useNavigate();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -45,55 +47,62 @@ function Home(props) {
   const listItem = [
     {
       text: "Dashboard",
-      link: "/dashboard",
+      link: "/home/dashboard",
       icon: <DashboardIcon color="secondary" />,
     },
     {
       text: "Fellows",
-      link: "/fellows",
+      link: "/home/fellows",
       icon: <PeopleAltIcon color="primary" />,
     },
     {
       text: "TimeSpend Details",
-      link: "/TimeSpendDetails",
+      link: "/home/TimeSpendDetails",
       icon: <AccessTimeIcon color="success" />,
     },
     {
       text: "Training Details",
-      link: "/TrainingDetails",
+      link: "/home/TrainingDetails",
       icon: <AcUnitIcon color="secondary" />,
     },
     {
       text: "NSDC Status",
-      link: "/NsdcStatus",
+      link: "/home/NsdcStatus",
       icon: <AllInclusiveIcon sx={{ color: pink[500] }} />,
     },
     {
       text: "Schools",
-      link: "/Schools",
+      link: "/home/Schools",
       icon: <AddHomeWorkIcon sx={{ color: "lightgreen" }} />,
     },
     {
       text: "Anganbadi",
-      link: "/Anganbadi",
+      link: "/home/Anganbadi",
       icon: <FontDownloadIcon sx={{ color: "blue" }} />,
     },
     {
       text: "PGE Students",
-      link: "/PgeStudents",
+      link: "/home/PgeStudents",
       icon: <AccessibilityIcon sx={{ color: "yellow" }} />,
     },
     {
       text: "ECE Students",
-      link: "/EceStudents",
+      link: "/home/EceStudents",
       icon: <AccessibilityIcon color="secondary" />,
     },
     {
       text: "Log out",
-      link: "/login",
+      link: "/",
       icon: <LogoutIcon color="secondary" />,
     },
   ];
+
+  const handleNavigate = (link) => {
+    if (link === "/") {
+      localStorage.removeItem("login");
+    }
+    navigate(link)
+  }
 
   const drawer = (
     <div>
@@ -112,11 +121,12 @@ function Home(props) {
           THINKZONE
         </h1>
       </Toolbar>
+
       <Divider />
       <List>
         {listItem.map((element, index) => (
           <Link to={element.link} style={{ textDecoration: "none" }}>
-            <ListItem key={element.text} disablePadding>
+            <ListItem key={element.text} disablePadding onClick={() => handleNavigate(element.link)} >
               <ListItemButton>
                 <ListItemIcon>
                   {element.icon}
@@ -137,6 +147,7 @@ function Home(props) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
+
       <AppBar
         position="fixed"
         sx={{
@@ -154,22 +165,24 @@ function Home(props) {
           >
             <MenuIcon />
           </IconButton>
+
           <Typography
             variant="h6"
             noWrap
             component="div"
             sx={{ textTransform: "uppercase" }}
           >
-            {pathname.split("/")[1]}
+            {pathname.split("/")[2]}
           </Typography>
+          <Profile />
         </Toolbar>
       </AppBar>
+
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
           container={container}
           variant="temporary"

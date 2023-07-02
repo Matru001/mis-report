@@ -73,13 +73,13 @@ export default function Schools() {
             // marginLeft: 15,
             // marginRight: 15,
             paddingBottom: 40,
-            // flexWrap: "wrap",
+            flexWrap: "wrap",
           }}
         >
           <h3 style={{ marginLeft: 15 }}>Download SchoolWise Data</h3>
 
           <div
-            style={{ display: "flex", width: 300, gridGap: 12, marginLeft: 15 }}
+            style={{ display: "flex", width: 300, gridGap: 12, marginLeft: 15, flexWrap:"wap" }}
           >
             <Select2 Age="Select passcode" />
             <Select2 Age="Select School" />

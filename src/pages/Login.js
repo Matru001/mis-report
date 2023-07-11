@@ -55,13 +55,12 @@ const Login = () => {
     authentication(); // Call the authentication function after form submission
   };
 
-  // useEffect(() => {
-  //   const isLoggedin = localStorage.getItem("login");
-  //   if (isLoggedin === "true") {
-  //     navigate("/home/dashboard");
-  //   }
-  // }, []);
-  
+  useEffect(() => {
+    const isLoggedin = localStorage.getItem("login");
+    if (isLoggedin === "true") {
+      navigate("/home/dashboard");
+    }
+  }, []);
   return (
     <div className="login-container">
       <div

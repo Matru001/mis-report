@@ -1,124 +1,206 @@
-import React from "react";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import React, { useState } from "react";
 import Text from "../components/Text";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Logo from "../components/Logo";
 import Links from "../components/Links";
-const currencies = [
+import Api from "../envirment/Api";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+
+const selectManager = [
   {
-    value: "EUR",
+    value: "None",
     label: "None",
   },
   {
-    value: "None",
+    value: "Suman",
     label: "Suman",
   },
   {
-    value: "BTC",
-    label: "Rajesh",
+    value: "guru@thinkzone.in",
+    label: "guru@thinkzone.in",
   },
   {
-    value: "JPY",
-    label: "aman",
+    value: "Guru",
+    label: "Guru",
   },
 ];
 
-const currenciesSet = [
+const selectManagerType = [
   {
-    value: "EUR",
-    label: "Select",
+    value: "manager",
+    label: "manager",
   },
   {
-    value: "USD",
-    label: "Manager",
-  },
-  {
-    value: "BTC",
+    value: "worker",
     label: "worker",
   },
   {
-    value: "JPY",
+    value: "Helper",
     label: "Helper",
   },
 ];
-const currencieses = [
+const passcodeArray = [
   {
-    value: "USD",
+    value: "Matru@123",
     label: "Matru@123",
   },
   {
-    value: "EUR",
+    value: "Password",
     label: "Password",
   },
   {
-    value: "BTC",
+    value: "rajesh@123",
     label: "rajesh@123",
   },
   {
-    value: "JPY",
-    label: "smruti@123",
+    value: "GURUBBS0323",
+    label: "GURUBBS0323",
   },
 ];
-const currenciesget = [
+const monthArray = [
   {
-    value: "USD",
+    value: "January",
     label: "January",
   },
   {
-    value: "EUR",
-    label: "None",
-  },
-  {
-    value: "BTC",
+    value: "February",
     label: "February",
   },
   {
-    value: "JPY",
+    value: "March",
     label: "March",
   },
   {
-    value: "JPY",
+    value: "April",
     label: "April",
   },
   {
-    value: "JPY",
+    value: "May",
     label: "May",
   },
   {
-    value: "JPY",
+    value: "June",
     label: "June",
   },
   {
-    value: "JPY",
+    value: "July",
     label: "July",
   },
   {
-    value: "JPY",
+    value: "August",
     label: "August",
   },
   {
-    value: "JPY",
+    value: "September",
     label: "September",
   },
   {
-    value: "JPY",
+    value: "Oct",
     label: "Oct",
   },
   {
-    value: "JPY",
+    value: "Novemember",
     label: "Novemember",
   },
   {
-    value: "JPY",
+    value: "December",
     label: "December",
   },
 ];
+const year = [
+  {
+    value: "2023",
+    label: "2023",
+  },
+  {
+    value: "2024",
+    label: "2024",
+  },
+  {
+    value: "2025",
+    label: "2025",
+  },
+];
+
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#5e72e4",
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 const TimeSpendDetails = () => {
+  const [selectedYear, setSelectedYear] = useState("");
+  const [manager, setManager] = useState("");
+  const [passcode, setPasscode] = useState("");
+  const [month, setMonth] = useState("");
+  const [user, setUser] = useState([]);
+
+  const handleYearChange = (event) => {
+    setSelectedYear(event.target.value);
+  };
+
+  const handleManagerChange = (event) => {
+    setManager(event.target.value);
+  };
+
+  const handlePasscodeChange = (event) => {
+    setPasscode(event.target.value);
+  };
+  const handleMonthChange = (event) => {
+    setMonth(event.target.value);
+  };
+
+  const getTimeSpentReportManagerwise = async () => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const body = {
+      year: selectedYear,
+      managerid: manager,
+      passcode: passcode,
+      // month: month,
+    };
+  
+    try {
+      const res = await Api.post(
+        `getTimeSpentReportManagerwise`,
+        body,
+        config
+      );
+      // console.log("response---->", res.status);
+      if (res.status === 200) {
+        setUser(res.data);
+        console.log("res------>", res);
+      }
+    } catch (error) {}
+  };
+
   return (
     <>
       <div
@@ -140,31 +222,114 @@ const TimeSpendDetails = () => {
             flexWrap: "wrap",
           }}
         >
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["DatePicker"]}>
               <DatePicker label="Select year" />
             </DemoContainer>
-          </LocalizationProvider>
+          </LocalizationProvider> */}
 
-          <div style={{ display: "flex", flexWrap: "wrap", }}>
-            <Text name="Select manager" currencies={currencies} />
-            <Text name="Select manager-type" currencies={currenciesSet} />
-            <Text name="Select passcode" currencies={currencieses} />
+          <div style={{ display: "flex", flexWrap: "wrap" }}>
+            <Text
+              name="Select year"
+              currencies={year}
+              handleChange={handleYearChange}
+            />
+            <Text
+              name="Select manager"
+              currencies={selectManager}
+              handleChange={handleManagerChange}
+            />
+            {/* <Text
+              name="Select manager-type"
+              currencies={selectManagerType}
+              handleChange={handleManagerChange}
+            /> */}
+            <Text
+              name="Select passcode"
+              currencies={passcodeArray}
+              handleChange={handlePasscodeChange}
+            />
             {/* <Text name="Teachers Name" currencies={currencies} /> */}
-            <Text name="Select month" currencies={currenciesget} />
+            <Text
+              name="Select month"
+              currencies={monthArray}
+              handleChange={handleMonthChange}
+            />
           </div>
         </div>
         <div style={{ marginTop: 50, marginLeft: 10 }}>
           <Stack spacing={2} direction="row">
-            <Button variant="contained" style={{ width: 250 }}>
+            <Button
+              variant="contained"
+              onClick={getTimeSpentReportManagerwise}
+              style={{ width: 250 }}
+            >
               Filter
             </Button>
           </Stack>
         </div>
       </div>
       <div style={{ flexWrap: "wrap" }}>
+        <div>
+          <TableContainer component={Paper}>
+            <Table
+              sx={{ minWidth: 70, marginTop: 3 }}
+              aria-label="customized table"
+            >
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Serial No</StyledTableCell>
+                  <StyledTableCell align="right">PPT</StyledTableCell>
+                  <StyledTableCell align="right">Training</StyledTableCell>
+                  <StyledTableCell align="right">Pgeactivity</StyledTableCell>
+                  <StyledTableCell align="right">Eceactivity</StyledTableCell>
+                  <StyledTableCell align="right">FLN</StyledTableCell>
+                  <StyledTableCell align="right">Reading</StyledTableCell>
+                  <StyledTableCell align="right">TotalTime</StyledTableCell>
+                  <StyledTableCell align="right">Training</StyledTableCell>
+                  <StyledTableCell align="right">UserName</StyledTableCell>
+                  <StyledTableCell align="right">Year</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {user.map((row, index) => (
+                  <StyledTableRow>
+                    <StyledTableCell component="th" scope="row">
+                      {index + 1}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{row.ppt}</StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.training}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.pgeactivity}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.eceactivity}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{row.fln}</StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.reading}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.totalTime}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.training}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{row.username}</StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.year}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
         <Logo />
-        <Links/>
+
+        <Links />
       </div>
     </>
   );

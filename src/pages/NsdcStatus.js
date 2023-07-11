@@ -1,5 +1,5 @@
 import React from "react";
-import Select from "../components/Select";
+import Select from "../components/Select1";
 import Text from "../components/Text";
 import Filter from "../components/Filter";
 import { TextField } from "@mui/material";
@@ -7,19 +7,19 @@ import Logo from "../components/Logo";
 import Links from "../components/Links";
 const currencies = [
   {
-    value: "EUR",
+    value: "None",
     label: "None",
   },
   {
-    value: "None",
+    value: "Suman",
     label: "Suman",
   },
   {
-    value: "BTC",
+    value: "Rajesh",
     label: "Rajesh",
   },
   {
-    value: "JPY",
+    value: "aman",
     label: "aman",
   },
 ];
@@ -30,15 +30,15 @@ const currenciesSet = [
     label: "Select",
   },
   {
-    value: "USD",
+    value: "Manager",
     label: "Manager",
   },
   {
-    value: "BTC",
+    value: "worker",
     label: "worker",
   },
   {
-    value: "JPY",
+    value: "Helper",
     label: "Helper",
   },
 ];
@@ -76,33 +76,36 @@ const NsdcStatus = () => {
           flexWrap: "wrap",
         }}
       >
-        <Select year="Select Year" />
         <div style={{ display: "flex", marginTop: 35, flexWrap: "wrap" }}>
+          <div style={{ marginTop: -35 }}>
+            <Select year="Select Year" />
+          </div>
           <Text name="Select manager" currencies={currencies} />
           <Text name="Select manager-type" currencies={currenciesSet} />
           <Text name="Select passcode" currencies={currencieses} />
           <Text name="Hello world" currencies={currencies} />
-          <Text name="Hello world" currencies={currencies} />
+          {/* <Text name="Hello world" currencies={currencies} /> */}
           <Filter
             details="Get Details"
             style={{ width: 250, marginTop: -30 }}
           />
         </div>
-      </div>
-      <div style={{ marginTop: -80, marginLeft: 25, display: "flex" }}>
-        <TextField
-          id="outlined-basic"
-          label="Search Fellow"
-          variant="outlined"
-          style={{ width: "1100px" }}
-        />
-        <Filter
-          details="Search"
-          style={{ marginTop: -40, background: "#8261DA" }}
-        />
+
+        <div style={{ marginTop: 20, marginLeft: 10, display: "flex" }}>
+          <TextField
+            id="outlined-basic"
+            label="Search Fellow"
+            variant="outlined"
+            style={{ width: "1100px" }}
+          />
+          <Filter
+            details="Search"
+            style={{ marginTop: -40, background: "#8261DA" }}
+          />
+        </div>
       </div>
       <Logo />
-      <Links/>
+      <Links />
     </>
   );
 };

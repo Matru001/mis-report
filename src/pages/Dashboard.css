@@ -1,6 +1,7 @@
 .container {
   background: linear-gradient(87deg, #11cdef 0, #1171ef 100%) !important;
   min-height: 50vh;
+  
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(172px, 1fr));
   justify-content: center;
@@ -15,4 +16,15 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px;
+}
+.select{
+  width: 200px;
+    height: 60px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    border-width: 2px;
+    color: #524e4e;
+    border-color: #878787;
 }

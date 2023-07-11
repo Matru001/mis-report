@@ -5,8 +5,12 @@ const Card = ({ name, number, Icon, style }) => {
   return (
     <div className="wraper">
       <div>
-        <h4>{name}</h4>
-        <h1>{number}</h1>
+        {/* <div> */}
+          <h4>{name}</h4>
+        {/* </div> */}
+        <div>
+          <h1>{number}</h1>
+        </div>
       </div>
 
       <div className="icon__cnt " style={style}>

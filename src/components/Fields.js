@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -42,6 +42,7 @@ const rows = [
 ];
 
 const Fields = () => {
+  const [row,setRow] = useState([])
   return (
     <div>
       <TableContainer component={Paper}>

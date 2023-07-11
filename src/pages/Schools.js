@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Select2 from "../components/Select2";
 import Filter from "../components/Filter";
-import Select from "../components/Select";
+import Select from "../components/Select1";
 import Logo from "../components/Logo";
 import Links from "../components/Links";
 

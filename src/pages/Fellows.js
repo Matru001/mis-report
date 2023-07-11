@@ -1,26 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Text from "../components/Text";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import { TextField } from "@mui/material";
-import { Height } from "@mui/icons-material";
+// import { TextField } from "@mui/material";
+// import {
+//   AccessibleSharp,
+//   ClassSharp,
+//   CloseFullscreen,
+//   Height,
+// } from "@mui/icons-material";
 import Number from "../components/Number";
-import Fields from "../components/Fields";
+// import Fields from "../components/Fields";
 import Links from "../components/Links";
 
-const currencies = [
-  {
-    value: "EUR",
-    label: "None",
-  },
+import Api from "../envirment/Api";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+const managerSet = [
   {
     value: "None",
-    label: "Suman Das",
+    label: "none",
   },
+  {
+    value: "guru@thinkzone.in",
+    label: "guru@thinkzone.in",
+  },
+
   {
     value: "BTC",
     label: "Rajesh Swain",
@@ -31,14 +43,14 @@ const currencies = [
   },
 ];
 
-const currenciesSet = [
+const managerTypeSet = [
   {
-    value: "EUR",
-    label: "Select",
+    value: "fellow",
+    label: "fellow",
   },
   {
-    value: "USD",
-    label: "Manager",
+    value: "none",
+    label: "none",
   },
   {
     value: "BTC",
@@ -49,14 +61,15 @@ const currenciesSet = [
     label: "Helper",
   },
 ];
-const currencieses = [
+
+const passcodeSet = [
   {
-    value: "USD",
-    label: "Matru@123",
+    value: "GURUBBS0323",
+    label: "GURUBBS0323",
   },
   {
-    value: "EUR",
-    label: "Password",
+    value: "none",
+    label: "none",
   },
   {
     value: "BTC",
@@ -68,7 +81,101 @@ const currencieses = [
   },
 ];
 
+const year = [
+  {
+    value: "2023",
+    label: "2023",
+  },
+  {
+    value: "none",
+    label: "none",
+  },
+
+  {
+    value: "2024",
+    label: "2024",
+  },
+  {
+    value: "2025",
+    label: "2025",
+  },
+];
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#5e72e4",
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
+
 const Fellows = () => {
+  const [selectedYear, setSelectedYear] = useState("");
+  const [manager, setManager] = useState("");
+  const [user, setUser] = useState([]);
+  // console.log("user---->", user);
+  const [managerType, setManagerType] = useState("");
+  const [passcode, setPasscode] = useState("");
+
+  const handleYearChange = (event) => {
+    setSelectedYear(event.target.value); 
+  };
+
+  const handleManagerChange = (event) => {
+    setManager(event.target.value); 
+  };
+  const handleManagerTypeChange = (event) => {
+    setManagerType(event.target.value); 
+  };
+
+  const handlePasscodeChange = (event) => {
+    setPasscode(event.target.value); 
+  };
+
+  const sortteacher = async () => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const body = {
+      year: selectedYear,
+
+      passcode: passcode,
+      managerid: manager,
+      // passcode: "GURUBBS0323",
+      managerType: managerType,
+    };
+
+    try {
+      const res = await Api.post(
+        `sortteacher`,
+        body, // Added body to the request
+        config // Added config to the request
+      );
+      // console.log("response---->", res.status);
+      if (res.status === 200) {
+        setUser(res.data);
+        console.log("data-------->",res.status);
+      }
+    } catch (error) {}
+  };
+  // useEffect(() => {
+  //   sortteacher();
+  // }, []);
+
   return (
     <>
       <div
@@ -84,39 +191,63 @@ const Fellows = () => {
             flexWrap: "wrap",
           }}
         >
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={["DatePicker"]}>
               <DatePicker label="Select year" />
             </DemoContainer>
-          </LocalizationProvider>
+          </LocalizationProvider> */}
 
           <div style={{ display: "flex", flexWrap: "wrap" }}>
-            <Text name="Select manager" currencies={currencies} />
-            <Text name="Select manager-type" currencies={currenciesSet} />
-            <Text name="Select passcode" currencies={currencieses} />
-            <Text name="Select District" currencies={currencies} />
-            <Text name="Select state" currencies={currencies} />
+            <Text
+              name="Select year"
+              currencies={year}
+              handleChange={handleYearChange}
+            />
+            <Text
+              name="Select manager"
+              currencies={managerSet}
+              handleChange={handleManagerChange}
+            />
+            <Text
+              name="Select manager-type"
+              currencies={managerTypeSet}
+              handleChange={handleManagerTypeChange}
+            />
+            <Text
+              name="Select passcode"
+              currencies={passcodeSet}
+              handleChange={handlePasscodeChange}
+            />
+            {/* <Text name="Select District" currencies={currencies} />
+            <Text name="Select state" currencies={currencies} /> */}
           </div>
           <div style={{ marginTop: 17, flexWrap: "wrap" }}>
             <Stack spacing={2} direction="row">
-              <Button variant="contained" style={{ width: 250 }}>
+              <Button
+                variant="contained"
+                onClick={sortteacher}
+                
+                style={{ width: 250 }}
+              >
                 Filter
               </Button>
             </Stack>
           </div>
         </div>
-        {/* <div style={{ display: "flex" }}>
-          <div style={{ marginTop: -40, marginLeft: 10, flexWrap: "wrap" }}>
+        {/* <div style={{ display: "flex",  flexWrap: "wrap" }}>
+          <div style={{ marginTop: 30, flex: "1 1 100%" }}>
             <TextField
               id="outlined-basic"
               variant="outlined"
               label="Search Fellow"
-              style={{ width: "1100px" }}
+              style={{ width: "50%", height: 120 }}
             />
           </div>
-          <div style={{ marginTop: -30, marginLeft: 10 }}>
+          <div style={{ marginTop: 40, marginLeft: 10, flex: "1 1 auto",  }}>
             <Stack spacing={2} direction="row">
-              <Button variant="contained">Filter</Button>
+              <Button variant="contained" style={{ width: 250, marginBottom:100 }}>
+                Filter
+              </Button>
             </Stack>
           </div>
         </div> */}
@@ -127,8 +258,62 @@ const Fellows = () => {
         <Number Name="Number of atudents baceline" count={84} />
         <Number Name="Number of Drop-out" count={468} />
       </div>
-      <Fields />
- 
+      <div>
+        <TableContainer component={Paper}>
+          <Table
+            sx={{ minWidth: 70, marginTop: 3 }}
+            aria-label="customized table"
+          >
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Serial No</StyledTableCell>
+                <StyledTableCell align="right">Manager Name</StyledTableCell>
+                <StyledTableCell align="right">User Name</StyledTableCell>
+                <StyledTableCell align="right">User Id</StyledTableCell>
+                <StyledTableCell align="right">User Type</StyledTableCell>
+                <StyledTableCell align="right">Reg-Date</StyledTableCell>
+                <StyledTableCell align="right">Status</StyledTableCell>
+                <StyledTableCell align="right">Contact No</StyledTableCell>
+                <StyledTableCell align="right">Guardian Name</StyledTableCell>
+                <StyledTableCell align="right">D.O.B</StyledTableCell>
+                <StyledTableCell align="right">AADHAR NO</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {user.map((row, index) => (
+                <StyledTableRow>
+                  <StyledTableCell component="th" scope="row">
+                    {index + 1}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.managername}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.username}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">{row.userid}</StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.usertype}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.createdon}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">{row.status}</StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.contactnumber}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    {row.guardianname}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">{row.dob}</StyledTableCell>
+                  <StyledTableCell align="right">{row.aadhaar}</StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+
       <Links />
     </>
   );

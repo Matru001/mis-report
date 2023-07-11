@@ -4,12 +4,12 @@ import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { Padding } from "@mui/icons-material";
 
-const Text = ({ name, currencies }) => {
+const Text = ({ name, currencies, handleChange }) => {
   return (
     <Box
       component="form"
       sx={{
-        "& .MuiTextField-root": { m: 1, width: "130px", height: 100 },
+        "& .MuiTextField-root": { m: 1, width: "190px", height: 70 },
       }}
       noValidate
       autoComplete="off"
@@ -20,8 +20,8 @@ const Text = ({ name, currencies }) => {
           id="outlined-select-currency"
           select
           label={name}
-          defaultValue="EUR"
-          // helperText={name}
+          defaultValue="none"
+          onChange={(e) => handleChange(e)}         // helperText={name}
         >
           {currencies.map((option) => (
             <MenuItem key={option.value} value={option.value}>

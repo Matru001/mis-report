@@ -8,6 +8,7 @@ const Links = () => {
     <div
       style={{
         display: "flex",
+        textDecoration:"none",
         
         justifyContent: "space-between",
         flexWrap: "wrap",
@@ -16,19 +17,20 @@ const Links = () => {
         
         
         
+        
       }}
     >
       <div>
         <a href={home} target="home">
-          <h3>@2023 ThinkZone</h3>
+          <p>@2023 ThinkZone</p>
         </a>
       </div>
-      <div style={{ display: "flex",gridGap:60, marginRight:100 }}>
+      <div style={{ display: "flex",gridGap:60, marginRight:100,textDecoration:"none" }}>
         <a href={links} target="thinkzone">
-          <h3>About us</h3>
+          <p>About us</p>
         </a>
         <a href={blogs} target="blogs">
-          <h3>Blogs</h3>
+          <p>Blogs</p>
         </a>
       </div>
     </div>

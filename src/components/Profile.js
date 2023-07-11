@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -15,12 +16,20 @@ const logout = "http://localhost:3000";
 
 export default function Profile () {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const navigate = useNavigate();
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleNavigate = () => {
+     {
+      localStorage.removeItem("login");
+    }
+    navigate("/");
   };
   return (
     <React.Fragment>
@@ -30,6 +39,7 @@ export default function Profile () {
           alignItems: "center",
           textAlign: "center",
           marginLeft: 125,
+        
         }}
       >
         {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
@@ -114,13 +124,11 @@ export default function Profile () {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleNavigate}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          <a style={{textDecoration:"none"}} href={logout} target="logout">
-            <h4>Logout</h4>
-          </a>
+          <h4>Logout</h4>
         </MenuItem>
       </Menu>
     </React.Fragment>

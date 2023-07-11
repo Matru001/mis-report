@@ -15,6 +15,7 @@ import Schools from "./pages/Schools";
 import Anganbadi from "./pages/Anganbadi";
 import PgeStudents from "./pages/PgeStudents";
 import EceStudents from "./pages/EceStudents";
+import Fln from "./pages/Fln";
 
 import Login from "./pages/Login";
 
@@ -29,7 +30,7 @@ function Root() {
     <Routes>
       <Route element={<PrivateRoute />}>
         <Route path="/home" element={<Home />}>
-          {/* <Route path="/home/dashboard" element={<Dashboard />} />
+          <Route path="/home/dashboard" element={<Dashboard />} />
           <Route path="/home/fellows" element={<Fellows />} />
           <Route path="/home/TimeSpendDetails" element={<TimeSpendDetails />} />
           <Route path="/home/TrainingDetails" element={<TrainingDetails />} />
@@ -37,7 +38,8 @@ function Root() {
           <Route path="/home/Schools" element={<Schools />} />
           <Route path="/home/Anganbadi" element={<Anganbadi />} />
           <Route path="/home/PgeStudents" element={<PgeStudents />} />
-          <Route path="/home/EceStudents" element={<EceStudents />} /> */}
+          <Route path="/home/EceStudents" element={<EceStudents />} />
+          <Route path="/home/Fln" element={<Fln />} />
         </Route>
       </Route>
       <Route path="/" element={<Login />} />

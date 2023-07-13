@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "../components/Select1";
 import Text from "../components/Text";
 import Filter from "../components/Filter";
@@ -120,6 +120,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const Fln = () => {
+  const [mine,setMine] = useState([])
   const [user, setUser] = useState([]);
   const [managerId, setManagerId] = useState("");
   const [managerType, setManagerType] = useState("");
@@ -148,6 +149,9 @@ const Fln = () => {
   };
 
   const getflnassessdetails = async () => {
+    if (selectedYear === "" || filter === "" || passcode === "") {
+      return alert("please select value")
+    }
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -163,12 +167,57 @@ const Fln = () => {
 
     try {
       const res = await Api.post("getflnassessdetails", body, config);
-      setUser(res.data.data); // Update the user state with the data from the API response
+      if (res.status === 200) {
+        setUser(res.data.data);
+      } // Update the user state with the data from the API response
       console.log("response---->", res.data.data); // Log the response data
     } catch (error) {
       console.log(error);
     }
   };
+
+  
+  const falnassesdetails = async () => {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const body = {
+        flag: "search",
+        searchstring: "arun das",
+    
+      };
+    try {
+      const resop = await Api.post("getflnassessdetails", body, config);
+      setMine(resop.data.data); // Update the user state with the data from the API response
+      console.log("responsematru---->", resop.data.data); // Log the response data
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  // useEffect(() => {
+  //   falnassesdetails();
+  // }, []);
+
+  
+//     const config = {
+//       header: {
+//         "Content-Type": "application/json",
+//       },
+//     };
+//     const body = {
+//       flag: "search",
+//       searchstring: "arun das",
+//     };
+
+// useEffect(() => {
+//   Api.post("getflnassessdetails", body, config).then((respo) => {
+//     setMine(respo.data.data);
+//     console.log("data------------->", respo.data.data);
+//   });
+// });
+  
 
   return (
     <>
@@ -226,78 +275,82 @@ const Fln = () => {
           />
           <Filter
             details="Search"
+            handleClick={falnassesdetails}
             style={{ marginTop: -40, background: "#8261DA" }}
           />
         </div>
       </div>
-
-      <div>
-        <TableContainer component={Paper}>
-          <Table
-            sx={{ minWidth: 70, marginTop: 3 }}
-            aria-label="customized table"
-          >
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>Serial No</StyledTableCell>
-                <StyledTableCell align="right">Manager Id</StyledTableCell>
-                <StyledTableCell align="right">User ID</StyledTableCell>
-                <StyledTableCell align="right">User Name</StyledTableCell>
-                <StyledTableCell align="right">Student Id</StyledTableCell>
-                <StyledTableCell align="right">Student name</StyledTableCell>
-                <StyledTableCell align="right">Student Status</StyledTableCell>
-                <StyledTableCell align="right"> Class</StyledTableCell>
-                <StyledTableCell align="right">
-                  
-                  BaselineMathsMarks
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  BaselineEnglishMarks
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  
-                  BaselineOdiaMarks
-                </StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {user.map((row, index) => (
-                <StyledTableRow key={index}>
-                  <StyledTableCell component="th" scope="row">
-                    {index + 1}
+      {user && user.length > 0 && (
+        <div>
+          <TableContainer component={Paper}>
+            <Table
+              sx={{ minWidth: 70, marginTop: 3 }}
+              aria-label="customized table"
+            >
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Serial No</StyledTableCell>
+                  <StyledTableCell align="right">Manager Id</StyledTableCell>
+                  <StyledTableCell align="right">User ID</StyledTableCell>
+                  <StyledTableCell align="right">User Name</StyledTableCell>
+                  <StyledTableCell align="right">Student Id</StyledTableCell>
+                  <StyledTableCell align="right">Student name</StyledTableCell>
+                  <StyledTableCell align="right">
+                    Student Status
+                  </StyledTableCell>
+                  <StyledTableCell align="right"> Class</StyledTableCell>
+                  <StyledTableCell align="right">
+                    BaselineMathsMarks
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    {row.managerid}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">{row.userid}</StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.username}
+                    BaselineEnglishMarks
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    {row.studentid}
+                    BaselineOdiaMarks
                   </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.studentname}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.studentstatus}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">{row.class}</StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.baselineMathsMarks}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.baselineEnglishMarks}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.baselineOdiaMarks}
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {user.map((row, index) => (
+                  <StyledTableRow key={index}>
+                    <StyledTableCell component="th" scope="row">
+                      {index + 1}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.managerid}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.userid}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.username}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.studentid}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.studentname}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.studentstatus}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{row.class}</StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.baselineMathsMarks}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.baselineEnglishMarks}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.baselineOdiaMarks}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      )}
 
       <Logo />
       <Links />

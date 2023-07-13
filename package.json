@@ -1,10 +1,10 @@
 {
   "dependencies": {
-    "@emotion/react": "latest",
-    "@emotion/styled": "latest",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "latest",
     "@mui/lab": "^5.0.0-alpha.133",
-    "@mui/material": "latest",
+    "@mui/material": "^5.14.0",
     "@mui/x-date-pickers": "^6.9.1",
     "axios": "^1.4.0",
     "dayjs": "^1.11.8",

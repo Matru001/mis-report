@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Text from "../components/Text";
+import TablePagination from "@mui/material/TablePagination";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Logo from "../components/Logo";
@@ -200,7 +201,17 @@ const TimeSpendDetails = () => {
       }
     } catch (error) {}
   };
+  const [page, setPage] = React.useState(2);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 5));
+    setPage(0);
+  };
   return (
     <>
       <div
@@ -270,63 +281,75 @@ const TimeSpendDetails = () => {
         </div>
       </div>
       <div style={{ flexWrap: "wrap" }}>
-        <div>
-          <TableContainer component={Paper}>
-            <Table
-              sx={{ minWidth: 70, marginTop: 3 }}
-              aria-label="customized table"
-            >
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>Serial No</StyledTableCell>
-                  <StyledTableCell align="right">PPT</StyledTableCell>
-                  <StyledTableCell align="right">Training</StyledTableCell>
-                  <StyledTableCell align="right">Pgeactivity</StyledTableCell>
-                  <StyledTableCell align="right">Eceactivity</StyledTableCell>
-                  <StyledTableCell align="right">FLN</StyledTableCell>
-                  <StyledTableCell align="right">Reading</StyledTableCell>
-                  <StyledTableCell align="right">TotalTime</StyledTableCell>
-                  <StyledTableCell align="right">Training</StyledTableCell>
-                  <StyledTableCell align="right">UserName</StyledTableCell>
-                  <StyledTableCell align="right">Year</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {user.map((row, index) => (
-                  <StyledTableRow>
-                    <StyledTableCell component="th" scope="row">
-                      {index + 1}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">{row.ppt}</StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.training}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.pgeactivity}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.eceactivity}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">{row.fln}</StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.reading}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.totalTime}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.training}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">{row.username}</StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.year}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
+        {user && user.length > 0 && (
+          <div>
+            <TableContainer component={Paper}>
+              <Table
+                sx={{ minWidth: 70, marginTop: 3 }}
+                aria-label="customized table"
+              >
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell>Serial No</StyledTableCell>
+                    <StyledTableCell align="right">PPT</StyledTableCell>
+                    <StyledTableCell align="right">Training</StyledTableCell>
+                    <StyledTableCell align="right">Pgeactivity</StyledTableCell>
+                    <StyledTableCell align="right">Eceactivity</StyledTableCell>
+                    <StyledTableCell align="right">FLN</StyledTableCell>
+                    <StyledTableCell align="right">Reading</StyledTableCell>
+                    <StyledTableCell align="right">TotalTime</StyledTableCell>
+                    <StyledTableCell align="right">Training</StyledTableCell>
+                    <StyledTableCell align="right">UserName</StyledTableCell>
+                    <StyledTableCell align="right">Year</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {user.map((row, index) => (
+                    <StyledTableRow>
+                      <StyledTableCell component="th" scope="row">
+                        {index + 1}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">{row.ppt}</StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.training}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.pgeactivity}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.eceactivity}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">{row.fln}</StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.reading}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.totalTime}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.training}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.username}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.year}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <TablePagination
+                component="div"
+                count={100}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TableContainer>
+          </div>
+        )}
         <Logo />
 
         <Links />

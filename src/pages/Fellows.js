@@ -1,19 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Text from "../components/Text";
 import TablePagination from "@mui/material/TablePagination";
-
-
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-// import { TextField } from "@mui/material";
-// import {
-//   AccessibleSharp,
-//   ClassSharp,
-//   CloseFullscreen,
-//   Height,
-// } from "@mui/icons-material";
 import Number from "../components/Number";
-// import Fields from "../components/Fields";
 import Links from "../components/Links";
 
 import Api from "../envirment/Api";
@@ -25,6 +15,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Logo from "../components/Logo";
+import ExportCsv from "../downloads/ExportCsv";
+
 const managerSet = [
   {
     value: "none",
@@ -34,13 +27,17 @@ const managerSet = [
     value: "guru@thinkzone.in",
     label: "guru@thinkzone.in",
   },
+  {
+    value: "nischintakoili4@thinkzone.in",
+    label: "nischintakoili4@thinkzone.in",
+  },
 
   {
-    value: "BTC",
-    label: "Rajesh Swain",
+    value: "RajeshSwain",
+    label: "RajeshSwain",
   },
   {
-    value: "JPY",
+    value: "aman",
     label: "aman",
   },
 ];
@@ -55,7 +52,7 @@ const managerTypeSet = [
     label: "fellow",
   },
   {
-    value: "BTC",
+    value: "worker",
     label: "worker",
   },
   {
@@ -74,11 +71,15 @@ const passcodeSet = [
     label: "GURUBBS0323",
   },
   {
-    value: "BTC",
+    value: "BHAGYAN0223",
+    label: "BHAGYAN0223",
+  },
+  {
+    value: "rajesh@123",
     label: "rajesh@123",
   },
   {
-    value: "JPY",
+    value: "smruti@123",
     label: "smruti@123",
   },
 ];
@@ -116,7 +117,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
-  // hide last border
   "&:last-child td, &:last-child th": {
     border: 0,
   },
@@ -125,10 +125,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const Fellows = () => {
   const [selectedYear, setSelectedYear] = useState("");
   const [manager, setManager] = useState("");
-  const [user, setUser] = useState([]);
-  // console.log("user---->", user);
+  const [data, setData] = useState([]);
   const [managerType, setManagerType] = useState("");
   const [passcode, setPasscode] = useState("");
+  const [page, setPage] = React.useState(0);
+  const [totalDataLength, setTotalDataLength] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleYearChange = (event) => {
     setSelectedYear(event.target.value);
@@ -161,114 +163,99 @@ const Fellows = () => {
       managerid: manager,
       managerType: managerType,
     };
-
     try {
-      const res = await Api.post(
-        `sortteacher`,
-        body, // Added body to the request
-        config // Added config to the request
-      );
-      // console.log("response---->", res.status);
+      const res = await Api.post(`sortteacher`, body, config);
       if (res.status === 200) {
-        setUser(res.data);
-        console.log("data-------->", res.status);
+        setData(res.data);
+        setTotalDataLength(res.data.length);
       }
     } catch (error) {}
   };
- 
-const [page, setPage] = React.useState(2);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(event.target.value);
     setPage(0);
   };
 
+  const fileName = "fellow";
+
+  const xlData = data.map((x) => {
+    console.log("x-->", x);
+    const { userid, username, ...exceptBoth } = x;
+    return exceptBoth;
+  });
+
   return (
     <>
-      <div
-        style={{
-          flexWrap: "wrap",
-        }}
-      >
+      <div>
         <div
           style={{
-            marginTop: 35,
-            display: "flex",
-            marginLeft: 10,
-            flexWrap: "wrap",
+            marginTop: "20px",
+            padding: "30px 20px",
+            display: "grid",
+            gap: "20px",
+            gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
           }}
         >
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
-            <Text
-              name="Select year"
-              currencies={year}
-              handleChange={handleYearChange}
-            />
-            <Text
-              name="Select manager"
-              currencies={managerSet}
-              handleChange={handleManagerChange}
-            />
-            <Text
-              name="Select manager-type"
-              currencies={managerTypeSet}
-              handleChange={handleManagerTypeChange}
-            />
-            <Text
-              name="Select passcode"
-              currencies={passcodeSet}
-              handleChange={handlePasscodeChange}
-            />
-            
-          </div>
-          <div style={{ marginTop: 17, flexWrap: "wrap" }}>
-            <Stack spacing={2} direction="row">
-              <Button
-                variant="contained"
-                onClick={sortteacher}
-                style={{ width: 250 }}
-              >
-                Filter
-              </Button>
-            </Stack>
-          </div>
+          <Text
+            name="Select year"
+            currencies={year}
+            handleChange={handleYearChange}
+          />
+          <Text
+            name="Select manager"
+            currencies={managerSet}
+            handleChange={handleManagerChange}
+          />
+          <Text
+            name="Select manager-type"
+            currencies={managerTypeSet}
+            handleChange={handleManagerTypeChange}
+          />
+          <Text
+            name="Select passcode"
+            currencies={passcodeSet}
+            handleChange={handlePasscodeChange}
+          />
+          <Stack spacing={2} direction="row">
+            <Button
+              variant="contained"
+              onClick={sortteacher}
+              style={{ width: 250, height: 40, marginTop: 5 }}
+            >
+              Filter
+            </Button>
+          </Stack>
         </div>
-        {/* <div style={{ display: "flex",  flexWrap: "wrap" }}>
-          <div style={{ marginTop: 30, flex: "1 1 100%" }}>
-            <TextField
-              id="outlined-basic"
-              variant="outlined"
-              label="Search Fellow"
-              style={{ width: "50%", height: 120 }}
-            />
-          </div>
-          <div style={{ marginTop: 40, marginLeft: 10, flex: "1 1 auto",  }}>
-            <Stack spacing={2} direction="row">
-              <Button variant="contained" style={{ width: 250, marginBottom:100 }}>
-                Filter
-              </Button>
-            </Stack>
-          </div>
-        </div> */}
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "20px",
+          padding: "20px",
+        }}
+      >
         <Number Name="Number of Active Fellows" count={34} />
         <Number Name="Number of Students" count={467} />
         <Number Name="Number of atudents baceline" count={84} />
         <Number Name="Number of Drop-out" count={468} />
       </div>
-      {user && user.length > 0 && (
-        <div>
-          <TableContainer component={Paper}>
-            <Table
-              sx={{ minWidth: 70, marginTop: 3 }}
-              aria-label="customized table"
-            >
+
+      {data && data.length > 0 && (
+        <div style={{ padding: "30px 20px", width: "100%" }}>
+          <TableContainer
+            component={Paper}
+            sx={{
+              marginTop: 3,
+              width: "100%",
+              borderRadius: "6px",
+              maxHeight: "800px",
+            }}
+          >
+            <Table aria-label="customized table">
               <TableHead>
                 <TableRow>
                   <StyledTableCell>Serial No</StyledTableCell>
@@ -285,57 +272,63 @@ const [page, setPage] = React.useState(2);
                 </TableRow>
               </TableHead>
               <TableBody>
-                {user.map((row, index) => (
-                  <StyledTableRow>
-                    <StyledTableCell component="th" scope="row">
-                      {index + 1}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.managername}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.username}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.userid}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.usertype}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.createdon}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.status}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.contactnumber}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.guardianname}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">{row.dob}</StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.aadhaar}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
+                {data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => (
+                    <StyledTableRow>
+                      <StyledTableCell component="th" scope="row">
+                        {index + 1}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.managername}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.username}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.userid}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.usertype}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.createdon}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.status}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.contactnumber}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.guardianname}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">{row.dob}</StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.aadhaar}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
               </TableBody>
             </Table>
-
-              <TablePagination
-      component="div"
-      count={100}
-      page={page}
-      onPageChange={handleChangePage}
-      rowsPerPage={rowsPerPage}
-      onRowsPerPageChange={handleChangeRowsPerPage}
-    />
+            <TablePagination
+              component="div"
+              count={totalDataLength}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </TableContainer>
         </div>
       )}
 
+      {data && data.length > 0 ? null : <Logo />}
+
       <Links />
+
+      {/* <ExportCsv csvData={xlData} fileName={fileName} /> */}
+      <ExportCsv/>
     </>
   );
 };

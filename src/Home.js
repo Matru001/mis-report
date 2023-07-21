@@ -93,13 +93,25 @@ function Home(props) {
     {
       text: "Fln",
       link: "/home/Fln",
-      icon: <AccessibilityIcon color="green" />,
+      icon: <InboxIcon color="green" />,
+    },
+
+    {
+      text: "PromotedStudent",
+      link: "/home/PromotedStudent",
+      icon: <PeopleAltIcon sx={{ color: "red" }} />,
+    },
+     {
+       text: "Feedback",
+       link: "/home/Feedback",
+       icon: <PeopleAltIcon sx={{ color: "red" }} />,
     },
     {
       text: "Log out",
       link: "/",
       icon: <LogoutIcon color="secondary" />,
     },
+   
   ];
 
   const handleNavigate = (link) => {

@@ -18,9 +18,7 @@ import Select from "@mui/material/Select";
 import Links from "../components/Links";
 import Api from "../envirment/Api";
 // import Select1 from "../components/Select1";
-
 const Femalefellows = "http://localhost:3000/home/fellows";
-
 const Dashboard = () => {
   const [year, setYear] = useState("2023");
   const [totalUsersCount, setTotalUsersCount] = useState({});
@@ -72,8 +70,7 @@ const Dashboard = () => {
           <h2>Fellow Performance</h2>
         </div>
 
-        <div style={{ marginBottom: 20, flexWrap: "wrap" }}>
-          {""}
+        <div>
           <Box
             sx={{
               minWidth: 180,
@@ -106,6 +103,7 @@ const Dashboard = () => {
           name="Active Users"
           number={totalUsersCount.activeUsersCount || 0}
           Icon={PeopleIcon}
+         
         />
         <a
           style={{ textDecoration: "none" }}
@@ -206,8 +204,8 @@ const Dashboard = () => {
           style={{ backgroundColor: "teal" }}
         />
         <Card
-          name="Total Girl Students"
-          number={avgEndline.avgEndlineMarks}
+          name="Total Girls Students"
+          number={avgEndline.avgEndlineMarks || 0}
           Icon={PeopleIcon}
           style={{ backgroundColor: "purple" }}
         />
@@ -234,8 +232,6 @@ const Dashboard = () => {
           Icon={PeopleIcon}
           style={{ backgroundColor: "blue" }}
         />
-        {/* <Card name="Schools" number={850} Icon={PeopleIcon} />
-        <Card name="Schools" number={745} Icon={PeopleIcon} /> */}
         <Card
           name="Schools"
           number={499}

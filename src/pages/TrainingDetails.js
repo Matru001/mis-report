@@ -13,6 +13,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import TablePagination from "@mui/material/TablePagination";
 
 const selectManager = [
   {
@@ -94,6 +95,10 @@ const TrainingDetails = () => {
   const [manager, setManager] = useState("");
   const [passcode, setPasscode] = useState("");
   const [user, setUser] = useState([]);
+const [page, setPage] = React.useState(0);
+const [totalDataLength, setTotalDataLength] = useState(0);
+const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  
 
   const handleYearChange = (event) => {
     setSelectedYear(event.target.value);
@@ -121,69 +126,65 @@ const TrainingDetails = () => {
       passcode: passcode,
     };
 
-    try {
+    try{
       const res = await Api.post(`getfellowsallstatusdata`, body, config);
       // console.log("response---->", res.status);
       if (res.status === 200) {
         setUser(res.data);
+        setTotalDataLength(res.data.length);
         console.log("res------>", res);
       }
     } catch (error) {}
   };
 
+  const handleChangePage = (event,newPage) => {
+    setPage(newPage)
+  }
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(event.target.value);
+    setPage(0);
+  }
+
   return (
     <>
       <div
         style={{
+          marginTop: "20px",
+          padding: "30px 20px",
+          display: "grid",
           boxShadow:
             "rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px",
-          marginTop: 40,
-          marginLeft: 15,
-          marginRight: 15,
-          display: "flex",
-          flexWrap: "wrap",
+          gap: "20px",
+          gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
         }}
       >
-        <div
-          style={{
-            marginTop: 35,
-            display: "flex",
-            marginLeft: 10,
-            flexWrap: "wrap",
-          }}
-        >
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
-            <Text
-              name="Select year"
-              currencies={year}
-              handleChange={handleYearChange}
-            />
-            <Text
-              name="Select manager name"
-              currencies={selectManager}
-              handleChange={handleManagerChange}
-            />
+        <Text
+          name="Select year"
+          currencies={year}
+          handleChange={handleYearChange}
+        />
+        <Text
+          name="Select manager name"
+          currencies={selectManager}
+          handleChange={handleManagerChange}
+        />
 
-            <Text
-              name="Select passcode"
-              currencies={passcodeArray}
-              handleChange={handlePasscodeChange}
-            />
-            {/* <Text name="Teachers Name" currencies={currencies} /> */}
-          </div>
-        </div>
-        <div style={{ marginTop: 50, marginLeft: 10 }}>
-          <Stack spacing={2} direction="row">
-            <Button
-              variant="contained"
-              onClick={getfellowsallstatusdata}
-              style={{ width: 250 }}
-            >
-              Filter
-            </Button>
-          </Stack>
-        </div>
+        <Text
+          name="Select passcode"
+          currencies={passcodeArray}
+          handleChange={handlePasscodeChange}
+        />
+        <Stack spacing={2} direction="row">
+          <Button
+            variant="contained"
+            onClick={getfellowsallstatusdata}
+            style={{ width: 250, height: 40, marginTop: 10 }}
+          >
+            Filter
+          </Button>
+        </Stack>
       </div>
+
       <div style={{ flexWrap: "wrap" }}>
         {user && user.length > 0 && (
           <div>
@@ -220,7 +221,9 @@ const TrainingDetails = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {user.map((row, index) => (
+                  {user
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => (
                     <StyledTableRow>
                       <StyledTableCell component="th" scope="row">
                         {index + 1}
@@ -259,10 +262,18 @@ const TrainingDetails = () => {
                   ))}
                 </TableBody>
               </Table>
+              <TablePagination
+                // component="div"
+                count={totalDataLength}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
             </TableContainer>
           </div>
         )}
-        <Logo />
+        {/* <Logo /> */}
 
         <Links />
       </div>

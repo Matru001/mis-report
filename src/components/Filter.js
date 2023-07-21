@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 const Filter = ({details,style,handleClick}) => {
   return (
     
-      <div style={{ marginTop: 50, marginLeft: 10 }}>
+      <div style={{ marginTop: 5, marginLeft: 10 }}>
         <Stack spacing={2} direction="row">
           <Button variant="contained" onClick={handleClick} style={style}>
           {details}

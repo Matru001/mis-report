@@ -157,6 +157,9 @@ const TimeSpendDetails = () => {
   const [manager, setManager] = useState("");
   const [passcode, setPasscode] = useState("");
   const [month, setMonth] = useState("");
+    const [page, setPage] = React.useState(0);
+    const [totalDataLength, setTotalDataLength] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [user, setUser] = useState([]);
 
   const handleYearChange = (event) => {
@@ -185,7 +188,6 @@ const TimeSpendDetails = () => {
       year: selectedYear,
       managerid: manager,
       passcode: passcode,
-      // month: month,
     };
   
     try {
@@ -194,92 +196,69 @@ const TimeSpendDetails = () => {
         body,
         config
       );
-      // console.log("response---->", res.status);
       if (res.status === 200) {
         setUser(res.data);
-        console.log("res------>", res);
+        setTotalDataLength(res.data.length);
+      
       }
     } catch (error) {}
   };
-  const [page, setPage] = React.useState(2);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+ 
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 5));
+    setRowsPerPage(event.target.value);
     setPage(0);
   };
   return (
     <>
       <div
         style={{
+          marginTop: "20px",
+          padding: "30px 20px",
+          display: "grid",
           boxShadow:
             "rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px",
-          marginTop: 40,
-          marginLeft: 15,
-          marginRight: 15,
-          display: "flex",
-          flexWrap: "wrap",
+          gap: "20px",
+          gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
         }}
       >
-        <div
-          style={{
-            marginTop: 35,
-            display: "flex",
-            marginLeft: 10,
-            flexWrap: "wrap",
-          }}
-        >
-          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker"]}>
-              <DatePicker label="Select year" />
-            </DemoContainer>
-          </LocalizationProvider> */}
+        <Text
+          name="Select year"
+          currencies={year}
+          handleChange={handleYearChange}
+        />
+        <Text
+          name="Select manager"
+          currencies={selectManager}
+          handleChange={handleManagerChange}
+        />
 
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
-            <Text
-              name="Select year"
-              currencies={year}
-              handleChange={handleYearChange}
-            />
-            <Text
-              name="Select manager"
-              currencies={selectManager}
-              handleChange={handleManagerChange}
-            />
-            {/* <Text
-              name="Select manager-type"
-              currencies={selectManagerType}
-              handleChange={handleManagerChange}
-            /> */}
-            <Text
-              name="Select passcode"
-              currencies={passcodeArray}
-              handleChange={handlePasscodeChange}
-            />
-            {/* <Text name="Teachers Name" currencies={currencies} /> */}
-            <Text
-              name="Select month"
-              currencies={monthArray}
-              handleChange={handleMonthChange}
-            />
-          </div>
-        </div>
-        <div style={{ marginTop: 50, marginLeft: 10 }}>
-          <Stack spacing={2} direction="row">
-            <Button
-              variant="contained"
-              onClick={getTimeSpentReportManagerwise}
-              style={{ width: 250 }}
-            >
-              Filter
-            </Button>
-          </Stack>
-        </div>
+        <Text
+          name="Select passcode"
+          currencies={passcodeArray}
+          handleChange={handlePasscodeChange}
+        />
+        <Text
+          name="Select month"
+          currencies={monthArray}
+          handleChange={handleMonthChange}
+        />
+
+        <Stack spacing={2} direction="row">
+          <Button
+            variant="contained"
+            onClick={getTimeSpentReportManagerwise}
+            style={{ width: 250, height: 40, marginTop: 10 }}
+          >
+            Filter
+          </Button>
+        </Stack>
       </div>
+
       <div style={{ flexWrap: "wrap" }}>
         {user && user.length > 0 && (
           <div>
@@ -304,7 +283,9 @@ const TimeSpendDetails = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {user.map((row, index) => (
+                  {user
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => (
                     <StyledTableRow>
                       <StyledTableCell component="th" scope="row">
                         {index + 1}
@@ -339,9 +320,10 @@ const TimeSpendDetails = () => {
                   ))}
                 </TableBody>
               </Table>
+           
               <TablePagination
                 component="div"
-                count={100}
+                count={totalDataLength}
                 page={page}
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
@@ -350,7 +332,7 @@ const TimeSpendDetails = () => {
             </TableContainer>
           </div>
         )}
-        <Logo />
+        {/* <Logo /> */}
 
         <Links />
       </div>

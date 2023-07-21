@@ -15,6 +15,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import TablePagination from "@mui/material/TablePagination";
 
 const managerIdSet = [
   {
@@ -127,6 +128,9 @@ const Fln = () => {
   const [passcode, setPasscode] = useState("");
   const [filter, setFilter] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
+    const [page, setPage] = React.useState(0);
+    const [totalDataLength, setTotalDataLength] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleManagerIdChange = (event) => {
     setManagerId(event.target.value);
@@ -139,7 +143,6 @@ const Fln = () => {
   const handlePasscodeChange = (event) => {
     setPasscode(event.target.value);
   };
-
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
@@ -169,6 +172,7 @@ const Fln = () => {
       const res = await Api.post("getflnassessdetails", body, config);
       if (res.status === 200) {
         setUser(res.data.data);
+          setTotalDataLength(res.data.data.length);
       } // Update the user state with the data from the API response
       console.log("response---->", res.data.data); // Log the response data
     } catch (error) {
@@ -177,108 +181,93 @@ const Fln = () => {
   };
 
   
-  const falnassesdetails = async () => {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const body = {
-        flag: "search",
-        searchstring: "arun das",
+//   const falnassesdetails = async () => {
+//       const config = {
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//       };
+//       const body = {
+//         flag: "search",
+//         searchstring: "arun das",
     
-      };
-    try {
-      const resop = await Api.post("getflnassessdetails", body, config);
-      setMine(resop.data.data); // Update the user state with the data from the API response
-      console.log("responsematru---->", resop.data.data); // Log the response data
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  // useEffect(() => {
-  //   falnassesdetails();
-  // }, []);
+//       };
+//     try {
+//       const resop = await Api.post("getflnassessdetails", body, config);
+//       setMine(resop.data.data); // Update the user state with the data from the API response
+//  setTotalDataLength(res.data.data.length);
+//       console.log("responsematru---->", resop.data.data); // Log the response data
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   }
 
+  const handleChangePage = (event,newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(event.target.value);
+    setPage(0);
+  };
   
-//     const config = {
-//       header: {
-//         "Content-Type": "application/json",
-//       },
-//     };
-//     const body = {
-//       flag: "search",
-//       searchstring: "arun das",
-//     };
-
-// useEffect(() => {
-//   Api.post("getflnassessdetails", body, config).then((respo) => {
-//     setMine(respo.data.data);
-//     console.log("data------------->", respo.data.data);
-//   });
-// });
   
 
   return (
     <>
       <div
         style={{
-          display: "flex",
-          boxShadow:
-            "rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px",
-          marginTop: 30,
-          marginLeft: 15,
-          marginRight: 15,
-          paddingBottom: 50,
-          flexWrap: "wrap",
+          marginTop: "20px",
+          padding: "30px 20px",
+          display: "grid",
+          gap: "20px",
+          gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
         }}
       >
-        <div style={{ display: "flex", marginTop: 35, flexWrap: "wrap" }}>
-          <Text
-            name="Select managerId"
-            currencies={managerIdSet}
-            handleChange={handleManagerIdChange}
-          />
-          <Text
-            name="Select year"
-            currencies={year}
-            handleChange={handleYearChange}
-          />
-          <Text
-            name="Select manager-type"
-            currencies={managerTypeSet}
-            handleChange={handleManagerTypeChange}
-          />
-          <Text
-            name="Select passcode"
-            currencies={passcodeSet}
-            handleChange={handlePasscodeChange}
-          />
-          <Text
-            name="FIlter"
-            currencies={FilterSet}
-            handleChange={handleFilterChange}
-          />
-          <Filter
-            details="Get Details"
-            handleClick={getflnassessdetails}
-            style={{ width: 250, marginTop: -30 }}
-          />
-        </div>
+        <Text
+          name="Select managerId"
+          currencies={managerIdSet}
+          handleChange={handleManagerIdChange}
+        />
+        <Text
+          name="Select year"
+          currencies={year}
+          handleChange={handleYearChange}
+        />
+        <Text
+          name="Select manager-type"
+          currencies={managerTypeSet}
+          handleChange={handleManagerTypeChange}
+        />
+        <Text
+          name="Select passcode"
+          currencies={passcodeSet}
+          handleChange={handlePasscodeChange}
+        />
+        <Text
+          name="FIlter"
+          currencies={FilterSet}
+          handleChange={handleFilterChange}
+        />
+        <Filter
+          details="Get Details"
+          handleClick={getflnassessdetails}
+          style={{ width: 250 }}
+        />
+      </div>
 
-        <div style={{ marginTop: 20, marginLeft: 10, display: "flex" }}>
-          <TextField
-            id="outlined-basic"
-            label="Search Fellow"
-            variant="outlined"
-            style={{ width: "1100px" }}
-          />
-          <Filter
-            details="Search"
-            handleClick={falnassesdetails}
-            style={{ marginTop: -40, background: "#8261DA" }}
-          />
-        </div>
+      <div style={{ marginTop: 20, marginLeft: 10, display: "flex" }}>
+        <TextField
+          id="outlined-basic"
+          label="Search Fellow"
+          variant="outlined"
+          style={{ width: "1000px",  }}
+        />
+        <Filter
+          details="Search"
+          // handleClick={falnassesdetails}
+          style={{ background: "#8261DA" }}
+        />
       </div>
       {user && user.length > 0 && (
         <div>
@@ -311,48 +300,60 @@ const Fln = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {user.map((row, index) => (
-                  <StyledTableRow key={index}>
-                    <StyledTableCell component="th" scope="row">
-                      {index + 1}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.managerid}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.userid}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.username}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.studentid}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.studentname}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.studentstatus}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">{row.class}</StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.baselineMathsMarks}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.baselineEnglishMarks}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.baselineOdiaMarks}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
+                {user
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell component="th" scope="row">
+                        {index + 1}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.managerid}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.userid}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.username}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.studentid}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.studentname}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.studentstatus}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.class}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.baselineMathsMarks}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.baselineEnglishMarks}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {row.baselineOdiaMarks}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))}
               </TableBody>
             </Table>
+            <TablePagination
+              component="div"
+              count={totalDataLength}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </TableContainer>
         </div>
       )}
 
-      <Logo />
+      {/* <Logo /> */}
       <Links />
     </>
   );

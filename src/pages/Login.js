@@ -6,7 +6,7 @@ import Links from "../components/Links";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+  const Login = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");

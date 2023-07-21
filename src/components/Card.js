@@ -5,9 +5,7 @@ const Card = ({ name, number, Icon, style }) => {
   return (
     <div className="wraper">
       <div>
-        {/* <div> */}
           <h4>{name}</h4>
-        {/* </div> */}
         <div>
           <h1>{number}</h1>
         </div>

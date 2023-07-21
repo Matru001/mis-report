@@ -14,7 +14,7 @@ export default function Select1() {
   };
 
   return (
-    <Box sx={{ minWidth: 180,marginTop:5.5,marginLeft:2 }}>
+    <Box sx={{ minWidth: 190 }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">Year</InputLabel>
         <Select

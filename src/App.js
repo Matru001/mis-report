@@ -16,8 +16,11 @@ import Anganbadi from "./pages/Anganbadi";
 import PgeStudents from "./pages/PgeStudents";
 import EceStudents from "./pages/EceStudents";
 import Fln from "./pages/Fln";
+import PromotedStudent from "./pages/PromotedStudent";
+import Feedback from "./pages/Feedback";
 
 import Login from "./pages/Login";
+// import PromotedStudent from "./pages/PromotedStudent";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
@@ -40,6 +43,8 @@ function Root() {
           <Route path="/home/PgeStudents" element={<PgeStudents />} />
           <Route path="/home/EceStudents" element={<EceStudents />} />
           <Route path="/home/Fln" element={<Fln />} />
+          <Route path="/home/PromotedStudent" element={<PromotedStudent />} />
+          <Route path="/home/Feedback" element={<Feedback />} />
         </Route>
       </Route>
       <Route path="/" element={<Login />} />

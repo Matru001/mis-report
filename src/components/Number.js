@@ -1,7 +1,5 @@
 import { Padding } from "@mui/icons-material";
 import React from "react";
-// import Box from "@mui/material/Box";
-// import TextField from "@mui/material/TextField";
 
 const Number = ({ Name, count }) => {
   return (
@@ -14,9 +12,7 @@ const Number = ({ Name, count }) => {
           "rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "15px",
-        marginLeft: "10px",
-        marginTop: "20px",
+        padding: "15px 0 15px 15px",
         height: 45,
         gridGap: ".1rem",
         gridTemplateColumns: "repeat(auto-fill, minmax(172px, 1fr))",
@@ -29,7 +25,11 @@ const Number = ({ Name, count }) => {
           style={{
             marginLeft: 12,
             background: "rgb(45, 206, 137)",
-            color: "white", borderRadius:4,padding:5,fontWeight:"bold",fontSize:"1.5rem"
+            color: "white",
+            borderRadius: 4,
+            padding: 5,
+            fontWeight: "bold",
+            fontSize: "1.5rem",
           }}
         >
           {count}

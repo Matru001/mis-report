@@ -1,8 +1,8 @@
 .wraper {
   
   background: #fff;
+ 
   height: 100px;
-  width: 200px;
   border-radius: 7px;
   box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15) !important;
   display: flex;

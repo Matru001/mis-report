@@ -1,40 +1,29 @@
-import React from "react";
-const links = "https://thinkzone.in/about-us/";
-const blogs = "https://thinkzone.in/blog/";
-const home = "https://thinkzone.in/";
-
+import React from 'react'
+const link1 = "https://thinkzone.in/"
+const link2 = "https://thinkzone.in/about-us/";
+const link3 = "https://thinkzone.in/blog/";
 const Links = () => {
   return (
-    <div
-      style={{
-        display: "flex",
-        textDecoration:"none",
-        
-        justifyContent: "space-between",
-        flexWrap: "wrap",
-        marginLeft: 50,
-        gridGap: 50,
-        
-        
-        
-        
-      }}
-    >
-      <div>
-        <a href={home} target="home">
-          <p>@2023 ThinkZone</p>
+    <>
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        <a href={link1} target="none" style={{ textDecoration: "none" }}>
+          <p>2023 @Thinkzone</p>
         </a>
+        <div style={{ display: "flex", }}>
+          <a
+            href={link2}
+            style={{ textDecoration: "none",  }}
+          >
+            <p>About us</p>
+          </a>
+          <a href={link3} style={{ textDecoration: "none" }}>
+            <p>Blog</p>
+          </a>
+        </div>
       </div>
-      <div style={{ display: "flex",gridGap:60, marginRight:100,textDecoration:"none" }}>
-        <a href={links} target="thinkzone">
-          <p>About us</p>
-        </a>
-        <a href={blogs} target="blogs">
-          <p>Blogs</p>
-        </a>
-      </div>
-    </div>
+    </>
   );
-};
+}
 
-export default Links;
+export default Links
+

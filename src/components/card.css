@@ -13,12 +13,17 @@
 }
 
 h4 {
-  color: #8898aa;
+  color: #1d3053;
   flex-wrap: wrap;
+  font-family: 'Nuosu SIL', serif;
+font-family: 'Poppins', sans-serif;
 }
 
 h1 {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
+  color: #393d84;
+  font-family: 'Nuosu SIL', serif;
+font-family: 'Poppins', sans-serif;
 }
 
 .icon__cnt {

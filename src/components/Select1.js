@@ -1,35 +1,32 @@
+import React from "react";
+import { TextField } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem"; // Correct import path
 
-import * as React from "react";
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-
-export default function Select1() {
-  const [year, setYear] = React.useState("");
-
-  const handleChange = (event) => {
-    setYear(event.target.value);
+const Select1 = ({ selectedYear, onChange }) => {
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 5 }, (_, index) => currentYear - index);
+  const handleYearChange = (event) => {
+    // const selectedYear = parseInt(event.target.value);
+    const selectedYear = event.target.value.toString();
+    onChange(selectedYear);
   };
-
   return (
-    <Box sx={{ minWidth: 190 }}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Year</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={year}
-          label="Year"
-          onChange={handleChange}
-        >
-          <MenuItem value={2021}>2021</MenuItem>
-          <MenuItem value={2022}>2022</MenuItem>
-          <MenuItem value={2023}>2023</MenuItem>
-          <MenuItem value={2024}>2024</MenuItem>
-        </Select>
-      </FormControl>
-    </Box>
+    <div>
+      <TextField
+        id="year"
+        select
+        value={selectedYear}
+        label="Select year"
+        onChange={(e) => handleYearChange(e)}
+        style={{ width: "100%" }}
+      >
+        {years.map((year) => (
+          <MenuItem key={year} value={year}>
+            {year}
+          </MenuItem>
+        ))}
+      </TextField>
+    </div>
   );
-}
+};
+export default Select1;

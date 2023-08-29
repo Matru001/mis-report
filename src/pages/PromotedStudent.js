@@ -6,32 +6,13 @@ import Button from "@mui/material/Button";
 
 import Api from "../envirment/Api";
 import Logo from '../components/Logo';
+import Select1 from '../components/Select1';
+import ReusableTextField from '../components/ReusableTextField';
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 
 
 
-const managerSet = [
-  {
-    value: "none",
-    label: "none",
-  },
-  {
-    value: "guru@thinkzone.in",
-    label: "guru@thinkzone.in",
-  },
-  {
-    value: "nischintakoili4@thinkzone.in",
-    label: "nischintakoili4@thinkzone.in",
-  },
-
-  {
-    value: "RajeshSwain",
-    label: "RajeshSwain",
-  },
-  {
-    value: "aman",
-    label: "aman",
-  },
-];
 
 const managerTypeSet = [
   {
@@ -52,62 +33,38 @@ const managerTypeSet = [
   },
 ];
 
-const passcodeSet = [
-  {
-    value: "none",
-    label: "none",
-  },
-  {
-    value: "GURUBBS0323",
-    label: "GURUBBS0323",
-  },
-  {
-    value: "BHAGYAN0223",
-    label: "BHAGYAN0223",
-  },
-  {
-    value: "rajesh@123",
-    label: "rajesh@123",
-  },
-  {
-    value: "smruti@123",
-    label: "smruti@123",
-  },
-];
 
-const year = [
-  {
-    value: "none",
-    label: "none",
-  },
-  {
-    value: "2022",
-    label: "2022",
-  },
-
-  {
-    value: "2023",
-    label: "2023",
-  },
-  {
-    value: "2024",
-    label: "2024",
-  },
-];
 
 const PromotedStudent = () => {
+   const [managerArr, setManagerArr] = useState([]);
  const [selectedYear, setSelectedYear] = useState("");
- const [manager, setManager] = useState("");
+ const [managerName, setManagerName] = useState("");
  const [managerType, setManagerType] = useState("");
- const [passcode, setPasscode] = useState("");
+  const [passcode, setPasscode] = useState("");
+    const [loaded, setLoaded] = useState(false);
 
+   useEffect(() => {
+     Api.get(`getManagerIdsWidPasscode`).then((response) => {
+       setManagerArr(response.data.resData);
+     });
+   }, []);
 
-      const handleYearChange = (event) => {
-        setSelectedYear(event.target.value);
+   let passcodeArray = [];
+
+   managerArr?.filter((element) => {
+     if (element.managerid === managerName) {
+       console.log("x--->", managerName, element);
+       passcodeArray = element.passcodes;
+       console.log("passcodeArray--->", passcodeArray);
+     }
+   });
+
+      const handleYearChange = (selectedYear) => {
+        setSelectedYear(selectedYear);
       };
 
       const handleManagerChange = (event) => {
-        setManager(event.target.value);
+        setManagerName(event.target.value);
       };
       const handleManagerTypeChange = (event) => {
         setManagerType(event.target.value);
@@ -120,7 +77,7 @@ const PromotedStudent = () => {
   const promotedS = async () => {
      if (
        selectedYear === "" ||
-       manager === "" ||
+       managerName === "" ||
        passcode === ""
      ) {
        return alert("Please select some filters to preceed");
@@ -133,21 +90,18 @@ const PromotedStudent = () => {
       };
       const body = {
         year: selectedYear,
-        managerid: manager,
+        managerid: managerName,
         passcode: passcode,
-      };
+    };
+     setLoaded(false);
       try {
         const res = await Api.post(`getPromotedStudentsReport`, body, config);
           if (res.status === 200) {
-        
+         setLoaded(true);
         }
       
-      } catch (error) {}
+      } catch (error) { setLoaded(true);}
   };
-  
-
-   
-
   return (
     <>
       <div>
@@ -160,29 +114,36 @@ const PromotedStudent = () => {
             gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
           }}
         >
-          <Text
-            name="Select year"
-            currencies={year}
-            handleChange={handleYearChange}
-          />
+          <Select1 selectedYear={selectedYear} onChange={handleYearChange} />
           <Text
             name="Select manager-type"
             currencies={managerTypeSet}
             handleChange={handleManagerTypeChange}
           />
-          <Text
-            name="Select manager"
-            currencies={managerSet}
-            handleChange={handleManagerChange}
-          />
 
-          <Text
-            name="Select passcode"
-            currencies={passcodeSet}
-            handleChange={handlePasscodeChange}
+
+          <TextField
+            id="outlined-select-currency"
+            select
+            label="Select manager"
+            defaultValue="none"
+            value={managerName}
+            onChange={(e) => handleManagerChange(e)}
+          >
+            {managerArr.map((option, index) => (
+              <MenuItem key={index + 1} value={option.managerid}>
+                {option.managername}
+              </MenuItem>
+            ))}
+          </TextField>
+
+          <ReusableTextField
+            label="Select passcode"
+            value={passcode}
+            options={passcodeArray}
+            onChange={handlePasscodeChange}
           />
           <Stack spacing={2} direction="row">
-            
             <Button
               variant="contained"
               onClick={promotedS}
@@ -193,8 +154,9 @@ const PromotedStudent = () => {
           </Stack>
         </div>
       </div>
-      {DataTransfer.length > 0 ? null : <Logo/>}
-    
+      {/* {DataTransfer.length > 0 ? null : <Logo/>} */}
+
+      {loaded && <Logo />}
     </>
   );
 }

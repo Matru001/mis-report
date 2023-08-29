@@ -11,14 +11,13 @@ import NsdcStatus from "./pages/NsdcStatus";
 import Home from "./Home";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
-import Schools from "./pages/Schools";
+// import Schools from "./pages/Schools";
 import Anganbadi from "./pages/Anganbadi";
 import PgeStudents from "./pages/PgeStudents";
 import EceStudents from "./pages/EceStudents";
 import Fln from "./pages/Fln";
 import PromotedStudent from "./pages/PromotedStudent";
 import Feedback from "./pages/Feedback";
-
 import Login from "./pages/Login";
 // import PromotedStudent from "./pages/PromotedStudent";
 
@@ -38,7 +37,7 @@ function Root() {
           <Route path="/home/TimeSpendDetails" element={<TimeSpendDetails />} />
           <Route path="/home/TrainingDetails" element={<TrainingDetails />} />
           <Route path="/home/NsdcStatus" element={<NsdcStatus />} />
-          <Route path="/home/Schools" element={<Schools />} />
+          {/* <Route path="/home/Schools" element={<Schools />} /> */}
           <Route path="/home/Anganbadi" element={<Anganbadi />} />
           <Route path="/home/PgeStudents" element={<PgeStudents />} />
           <Route path="/home/EceStudents" element={<EceStudents />} />

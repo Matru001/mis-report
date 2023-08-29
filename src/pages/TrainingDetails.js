@@ -1,59 +1,20 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Text from "../components/Text";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Logo from "../components/Logo";
 import Links from "../components/Links";
 import Api from "../envirment/Api";
-import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import TablePagination from "@mui/material/TablePagination";
-
-const selectManager = [
-  {
-    value: "None",
-    label: "None",
-  },
-  {
-    value: "suman",
-    label: "suman",
-  },
-
-  {
-    value: "guru@thinkzone.in",
-    label: "guru@thinkzone.in",
-  },
-  {
-    value: "Guru",
-    label: "Guru",
-  },
-];
+import Fields from "../components/Fields";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import ReusableTextField from "../components/ReusableTextField";
+import Select1 from "../components/Select1";
 
 
-const passcodeArray = [
-  {
-    value: "Matru@123",
-    label: "Matru@123",
-  },
-  {
-    value: "Password",
-    label: "Password",
-  },
-  {
-    value: "rajesh@123",
-    label: "rajesh@123",
-  },
-  {
-    value: "GURUBBS0323",
-    label: "GURUBBS0323",
-  },
-];
+
+
+
 
 const year = [
   {
@@ -69,48 +30,67 @@ const year = [
     label: "2025",
   },
 ];
+const selectManagerType = [
+  {
+    value: "manager",
+    label: "manager",
+  },
+  {
+    value: "worker",
+    label: "worker",
+  },
+  {
+    value: "Helper",
+    label: "Helper",
+  },
+];
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#5e72e4",
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
 
 const TrainingDetails = () => {
   const [selectedYear, setSelectedYear] = useState("");
-  const [manager, setManager] = useState("");
+  const [managerName, setManagerName] = useState("");
   const [passcode, setPasscode] = useState("");
-  const [user, setUser] = useState([]);
+  const [managerType, setManagerType] = useState("");
+  const [data, setData] = useState([]);
 const [page, setPage] = React.useState(0);
 const [totalDataLength, setTotalDataLength] = useState(0);
-const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [loaded, setLoaded] = useState(false);
+  const [managerArr, setManagerArr] = useState([]);
   
+  
+  useEffect(() => {
+    Api.get(`getManagerIdsWidPasscode`).then((response) => {
+      setManagerArr(response.data.resData);
+    });
+  }, []);
 
-  const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
+  let passcodeArray = [];
+
+  managerArr?.filter((element) => {
+    // console.log("x--->", element, managerName);
+    if (element.managerid === managerName) {
+      console.log("x--->", managerName, element);
+      passcodeArray = element.passcodes;
+      console.log("passcodeArray--->", passcodeArray);
+    }
+  });
+
+  const handleYearChange = (selectedYear) => {
+    setSelectedYear(selectedYear);
   };
 
   const handleManagerChange = (event) => {
-    setManager(event.target.value);
+    setManagerName(event.target.value);
   };
 
   const handlePasscodeChange = (event) => {
     setPasscode(event.target.value);
   };
+  const handleManagerTypeChange = (event) => {
+    setManagerType(event.target.value)
+  }
   
 
   const getfellowsallstatusdata = async () => {
@@ -122,19 +102,20 @@ const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
     const body = {
       yearSelect: selectedYear,
-      "managername": "",
+      managername: managerName,
       passcode: passcode,
     };
-
+setLoaded(false);
     try{
       const res = await Api.post(`getfellowsallstatusdata`, body, config);
       // console.log("response---->", res.status);
       if (res.status === 200) {
-        setUser(res.data);
+        setData(res.data);
         setTotalDataLength(res.data.length);
+        setLoaded(true);
         console.log("res------>", res);
       }
-    } catch (error) {}
+    } catch (error) {setLoaded(true);}
   };
 
   const handleChangePage = (event,newPage) => {
@@ -144,6 +125,66 @@ const [rowsPerPage, setRowsPerPage] = React.useState(10);
     setRowsPerPage(event.target.value);
     setPage(0);
   }
+
+  
+  const columns = [
+    "Serial No",
+    "User Id",
+    "User Name",
+    "BacelineCount",
+    "EndlineCount",
+    "ppt_master_topics_count",
+    "ppt_trans_topics_count",
+    "ppt_mark",
+    "ppt_status",
+    "training_master_topics_count",
+    "training_trans_topics_count",
+    "training_mark",
+    "training_status",
+
+  ];
+
+  const getCellValue = (row, column, index) => {
+    switch (column) {
+      case "Serial No":
+        return index + 1;
+      case "User Id":
+        return row.userid;
+      case "User Name":
+        return row.username;
+      case "BacelineCount":
+        return row.baseline_count;
+      case "EndlineCount":
+        return row.endline_count;
+      case "ppt_master_topics_count":
+        return row.ppt_master_topics_count;
+      case "ppt_trans_topics_count":
+        return row.ppt_trans_topics_count;
+      case "ppt_mark":
+        return row.ppt_mark;
+      case "ppt_status":
+        return row.ppt_status;
+
+      case "training_master_topics_count":
+        return row.training_master_topics_count;
+      case "training_trans_topics_count":
+        return row.training_trans_topics_count;
+      case "training_mark":
+        return row.training_mark;
+      case "training_status":
+        return row.training_status;
+
+      default:
+        return "";
+    }
+  };
+
+  const fileName = "fellow";
+
+  const xlData = data.map((x) => {
+    const { userid, username, ...exceptBoth } = x;
+    return exceptBoth;
+  });
 
   return (
     <>
@@ -158,21 +199,37 @@ const [rowsPerPage, setRowsPerPage] = React.useState(10);
           gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
         }}
       >
-        <Text
+        <Select1 selectedYear={selectedYear} onChange={handleYearChange} />
+        {/* <Text
           name="Select year"
           currencies={year}
           handleChange={handleYearChange}
-        />
+        /> */}
         <Text
-          name="Select manager name"
-          currencies={selectManager}
-          handleChange={handleManagerChange}
+          name="Select managerType"
+          currencies={selectManagerType}
+          handleChange={handleManagerTypeChange}
         />
+        <TextField
+          id="outlined-select-currency"
+          select
+          label="Select manager"
+          defaultValue="none"
+          value={managerName}
+          onChange={(e) => handleManagerChange(e)}
+        >
+          {managerArr.map((option, index) => (
+            <MenuItem key={index + 1} value={option.managerid}>
+              {option.managername}
+            </MenuItem>
+          ))}
+        </TextField>
 
-        <Text
-          name="Select passcode"
-          currencies={passcodeArray}
-          handleChange={handlePasscodeChange}
+        <ReusableTextField
+          label="Select passcode"
+          value={passcode}
+          options={passcodeArray}
+          onChange={handlePasscodeChange}
         />
         <Stack spacing={2} direction="row">
           <Button
@@ -185,98 +242,27 @@ const [rowsPerPage, setRowsPerPage] = React.useState(10);
         </Stack>
       </div>
 
-      <div style={{ flexWrap: "wrap" }}>
-        {user && user.length > 0 && (
-          <div>
-            <TableContainer component={Paper}>
-              <Table
-                sx={{ minWidth: 70, marginTop: 3 }}
-                aria-label="customized table"
-              >
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell>Serial No</StyledTableCell>
-                    <StyledTableCell align="right">UserId</StyledTableCell>
-                    <StyledTableCell align="right">username</StyledTableCell>
-                    <StyledTableCell align="right">
-                      BaselineCount
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      EndlineCount
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      PPT Master Topics count
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      ppt_trans_topics_count
-                    </StyledTableCell>
-                    <StyledTableCell align="right">ppt_mark</StyledTableCell>
-                    <StyledTableCell align="right">ppt_status</StyledTableCell>
-                    <StyledTableCell align="right">
-                      training_master_topics_count
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      training_trans_topics_count
-                    </StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {user
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => (
-                    <StyledTableRow>
-                      <StyledTableCell component="th" scope="row">
-                        {index + 1}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.userid}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.username}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.baseline_count}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.endline_count}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.ppt_master_topics_count}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.ppt_trans_topics_count}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.ppt_mark}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.ppt_status}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.training_master_topics_count}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.training_trans_topics_count}
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <TablePagination
-                // component="div"
-                count={totalDataLength}
-                page={page}
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </TableContainer>
-          </div>
-        )}
-        {/* <Logo /> */}
-
-        <Links />
-      </div>
+      {loaded && (
+        <>
+          {data && data.length > 0 ? (
+            <Fields
+              data={data}
+              totalDataLength={totalDataLength}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              handleChangePage={handleChangePage}
+              handleChangeRowsPerPage={handleChangeRowsPerPage}
+              xlData={xlData}
+              fileName={fileName}
+              columns={columns}
+              getCellValue={getCellValue}
+            />
+          ) : (
+            <Logo />
+          )}
+        </>
+      )}
+      <Links />
     </>
   );
 };

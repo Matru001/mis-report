@@ -13,12 +13,9 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-// import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-// import Dashboard from "./components/Dashboard";
-// import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -31,6 +28,7 @@ import { pink, yellow } from "@mui/material/colors";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Profile from "./components/Profile";
 // import Profile from "./components/Profile";
+import FeedbackIcon from "@mui/icons-material/Feedback";
 
 const drawerWidth = 240;
 
@@ -39,7 +37,9 @@ function Home(props) {
   const navigate = useNavigate();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
+  const [activeLink, setActiveLink] = React.useState(
+    location.pathname.split("/")[2]
+  );
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -70,11 +70,11 @@ function Home(props) {
       link: "/home/NsdcStatus",
       icon: <AllInclusiveIcon sx={{ color: pink[500] }} />,
     },
-    {
-      text: "Schools",
-      link: "/home/Schools",
-      icon: <AddHomeWorkIcon sx={{ color: "lightgreen" }} />,
-    },
+    // {
+    //   text: "Schools",
+    //   link: "/home/Schools",
+    //   icon: <AddHomeWorkIcon sx={{ color: "lightgreen" }} />,
+    // },
     {
       text: "Anganbadi",
       link: "/home/Anganbadi",
@@ -101,25 +101,25 @@ function Home(props) {
       link: "/home/PromotedStudent",
       icon: <PeopleAltIcon sx={{ color: "red" }} />,
     },
-     {
-       text: "Feedback",
-       link: "/home/Feedback",
-       icon: <PeopleAltIcon sx={{ color: "red" }} />,
+    {
+      text: "Feedback",
+      link: "/home/Feedback",
+      icon: <FeedbackIcon sx={{ color: "green" }} />,
     },
     {
       text: "Log out",
       link: "/",
       icon: <LogoutIcon color="secondary" />,
     },
-   
   ];
 
   const handleNavigate = (link) => {
+    setActiveLink(link.split("/")[2]);
     if (link === "/") {
       localStorage.removeItem("login");
     }
-    navigate(link)
-  }
+    navigate(link);
+  };
 
   const drawer = (
     <div>
@@ -133,6 +133,7 @@ function Home(props) {
             textAlign: "center",
             WebkitBackgroundClip: "text",
             backgroundImage: "linear-gradient(310deg,#2152ff,#21d4fd)",
+            fontFamily: "'Nuosu SIL', serif",
           }}
         >
           THINKZONE
@@ -142,12 +143,27 @@ function Home(props) {
       <Divider />
       <List>
         {listItem.map((element, index) => (
-          <Link to={element.link} style={{ textDecoration: "none" }}>
-            <ListItem key={element.text} disablePadding onClick={() => handleNavigate(element.link)} >
+          <Link
+            to={element.link}
+            style={{
+              textDecoration: "none",
+            }}
+          >
+            <ListItem
+              key={element.text}
+              disablePadding
+              onClick={() => handleNavigate(element.link)}
+              style={{
+                background:
+                  activeLink === element.link.split("/")[2]
+                    ? "rgba(0, 0, 0, 0.1)"
+                    : "white",
+                textDecoration: "none",
+              }}
+            >
               <ListItemButton>
                 <ListItemIcon>
                   {element.icon}
-                  {/* {index % 3 === 0 ? <InboxIcon /> : <MailIcon />  } */}
                 </ListItemIcon>
                 <ListItemText primary={element.text} sx={{ color: "gray" }} />
               </ListItemButton>
@@ -191,7 +207,7 @@ function Home(props) {
           >
             {pathname.split("/")[2]}
           </Typography>
-          
+
           <Profile />
         </Toolbar>
       </AppBar>

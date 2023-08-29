@@ -30,6 +30,7 @@ const Number = ({ Name, count }) => {
             padding: 5,
             fontWeight: "bold",
             fontSize: "1.5rem",
+            fontFamily: "'Nuosu SIL', serif" 
           }}
         >
           {count}

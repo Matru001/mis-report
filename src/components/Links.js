@@ -5,19 +5,24 @@ const link3 = "https://thinkzone.in/blog/";
 const Links = () => {
   return (
     <>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
+      <div
+        style={{
+          display: "flex",
+          
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+          margin: 10,
+        }}
+      >
         <a href={link1} target="none" style={{ textDecoration: "none" }}>
-          <p>2023 @Thinkzone</p>
+          <h4>2023 @Thinkzone</h4>
         </a>
-        <div style={{ display: "flex", }}>
-          <a
-            href={link2}
-            style={{ textDecoration: "none",  }}
-          >
-            <p>About us</p>
+        <div style={{display:"flex",}}>
+          <a href={link2} style={{ textDecoration: "none",marginRight:50 }}>
+            <h4>About us</h4>
           </a>
           <a href={link3} style={{ textDecoration: "none" }}>
-            <p>Blog</p>
+            <h4>Blog</h4>
           </a>
         </div>
       </div>

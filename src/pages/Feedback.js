@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Text from "../components/Text";
-
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-
 import Api from "../envirment/Api";
 import Logo from "../components/Logo";
-
-
 const managerSet = [
   {
     value: "none",
@@ -21,7 +17,6 @@ const managerSet = [
     value: "nischintakoili4@thinkzone.in",
     label: "nischintakoili4@thinkzone.in",
   },
-
   {
     value: "RajeshSwain",
     label: "RajeshSwain",
@@ -76,8 +71,8 @@ const passcodeSet = [
 
 const year = [
   {
-    value: "none",
-    label: "none",
+    value: "2023",
+    label: "2023",
   },
   {
     value: "2022",
@@ -85,12 +80,13 @@ const year = [
   },
 
   {
-    value: "2023",
-    label: "2023",
+    value: "2021",
+    label: "2021",
   },
+
   {
-    value: "2024",
-    label: "2024",
+    value: "2020",
+    label: "2020",
   },
 ];
 
@@ -99,6 +95,7 @@ const Feedback = () => {
   const [manager, setManager] = useState("");
   const [managerType, setManagerType] = useState("");
   const [passcode, setPasscode] = useState("");
+   const [loaded, setLoaded] = useState(false);
 
   const handleYearChange = (event) => {
     setSelectedYear(event.target.value);
@@ -127,30 +124,30 @@ const Feedback = () => {
     };
     const body = {
     userids: ["arun@gmail.com", "ajit@gmail.com"],
-  };
+    };
+     setLoaded(false);
     try {
       const res = await Api.post(
-        ` tchactivitynew_getactivitiydetails_passcodewise
-`,
+        ` tchactivitynew_getactivitiydetails_passcodewise`,
         body,
         config
       );
       if (res.status === 200) {
+         setLoaded(true);
       }
-    } catch (error) {}
+    } catch (error) { setLoaded(true);}
   };
 
   return (
     <>
-      <div   >
+      <div>
         <div
           style={{
             marginTop: "20px",
             padding: "30px 20px",
             display: "grid",
             gap: "20px",
-                      gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
-            
+            gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
           }}
         >
           <Text
@@ -185,7 +182,8 @@ const Feedback = () => {
           </Stack>
         </div>
       </div>
-      {DataTransfer.length > 0 ? null : <Logo />}
+      {/* {DataTransfer.length > 0 ? null : <Logo />} */}
+      {loaded && <Logo />}
     </>
   );
 };

@@ -150,11 +150,6 @@ const PgeStudents = () => {
           <Text name="Select manager-type" currencies={managerTypeSet} handleChange={handleManagerTypeChange}/>
           <Text name="Select manager" currencies={managerSet} handleChange={handleManagerChange}/>
           <Text name="Select passcode" currencies={passcodeSet} handleChange={handlePasscodeChange}/>
-          {/* <Text name="Select Teacher" currencies={currencies} /> */}
-          {/* <Text name="Class" currencies={currencies} /> */}
-          {/* <Text name="Gender" currencies={currencies} /> */}
-          {/* <Text name="Select District" currencies={currencies} /> */}
-          {/* <Text name="Select block" currencies={currencies} /> */}
           <Filter details="Filter" handleClick={PgeStudent}      style={{ width: 250 }} />
         </div>
 

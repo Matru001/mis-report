@@ -1,143 +1,57 @@
 import React, { useEffect, useState } from "react";
 import Text from "../components/Text";
-import TablePagination from "@mui/material/TablePagination";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Number from "../components/Number";
-import Links from "../components/Links";
-
-import Api from "../envirment/Api";
-import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import Select1 from "../components/Select1";
+import Fields from "../components/Fields";
 import Logo from "../components/Logo";
-import ExportCsv from "../downloads/ExportCsv";
-
-const managerSet = [
-  {
-    value: "none",
-    label: "none",
-  },
-  {
-    value: "guru@thinkzone.in",
-    label: "guru@thinkzone.in",
-  },
-  {
-    value: "nischintakoili4@thinkzone.in",
-    label: "nischintakoili4@thinkzone.in",
-  },
-
-  {
-    value: "RajeshSwain",
-    label: "RajeshSwain",
-  },
-  {
-    value: "aman",
-    label: "aman",
-  },
-];
+import Links from "../components/Links";
+import Number from "../components/Number";
+import moment from "moment/moment";
+import Api from "../envirment/Api";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import ReusableTextField from "../components/ReusableTextField";
 
 const managerTypeSet = [
-  {
-    value: "none",
-    label: "none",
-  },
-  {
-    value: "fellow",
-    label: "fellow",
-  },
-  {
-    value: "worker",
-    label: "worker",
-  },
-  {
-    value: "Helper",
-    label: "Helper",
-  },
+  { value: "none", label: "none" },
+  { value: "MANAGER", label: "MANAGER" },
+  { value: "worker", label: "worker" },
+  { value: "Helper", label: "Helper" },
 ];
-
-const passcodeSet = [
-  {
-    value: "none",
-    label: "none",
-  },
-  {
-    value: "GURUBBS0323",
-    label: "GURUBBS0323",
-  },
-  {
-    value: "BHAGYAN0223",
-    label: "BHAGYAN0223",
-  },
-  {
-    value: "rajesh@123",
-    label: "rajesh@123",
-  },
-  {
-    value: "smruti@123",
-    label: "smruti@123",
-  },
-];
-
-const year = [
-  {
-    value: "none",
-    label: "none",
-  },
-  {
-    value: "2022",
-    label: "2022",
-  },
-
-  {
-    value: "2023",
-    label: "2023",
-  },
-  {
-    value: "2024",
-    label: "2024",
-  },
-];
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#5e72e4",
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
-
 const Fellows = () => {
   const [selectedYear, setSelectedYear] = useState("");
-  const [manager, setManager] = useState("");
-  const [data, setData] = useState([]);
+  const [managerArr, setManagerArr] = useState([]);
   const [managerType, setManagerType] = useState("");
   const [passcode, setPasscode] = useState("");
+  const [managerName, setManagerName] = useState("");
+  // console.log("managerName--->", managerName);
+  const [data, setData] = useState([]);
   const [page, setPage] = React.useState(0);
   const [totalDataLength, setTotalDataLength] = useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [loaded, setLoaded] = useState(false);
 
-  const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
+  useEffect(() => {
+    Api.get(`getManagerIdsWidPasscode`).then((response) => {
+      setManagerArr(response.data.resData);
+    });
+  }, []);
+
+  let passcodeArray = [];
+
+  managerArr?.filter((element) => {
+    if (element.managerid === managerName) {
+      // console.log("x--->", managerName, element);
+      passcodeArray = element.passcodes;
+    }
+  });
+  const handleYearChange = (selectedYear) => {
+    setSelectedYear(selectedYear);
   };
-
   const handleManagerChange = (event) => {
-    setManager(event.target.value);
+    setManagerName(event.target.value);
+    // console.log("managername---------->", managerName);
   };
   const handleManagerTypeChange = (event) => {
     setManagerType(event.target.value);
@@ -148,9 +62,10 @@ const Fellows = () => {
   };
 
   const sortteacher = async () => {
-    if (selectedYear === "" || manager === "" || passcode === "") {
+    if (selectedYear === "" || managerName === "" || passcode === "") {
       return alert("Please select some filters to preceed");
     }
+
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -160,16 +75,20 @@ const Fellows = () => {
     const body = {
       year: selectedYear,
       passcode: passcode,
-      managerid: manager,
+      managerid: managerName,
       managerType: managerType,
     };
+    setLoaded(false);
     try {
-      const res = await Api.post(`sortteacher`, body, config);
+      const res = await Api.post(`sortteacher`, body,config);
       if (res.status === 200) {
         setData(res.data);
         setTotalDataLength(res.data.length);
+        setLoaded(true);
       }
-    } catch (error) {}
+    } catch (error) {
+      setLoaded(true);
+    }
   };
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -179,46 +98,126 @@ const Fellows = () => {
     setPage(0);
   };
 
+  const columns = [
+    "Serial No",
+    "Manager Name",
+    "User Name",
+    "User Id",
+    "User Type",
+    "Reg-Date",
+    "Status",
+    "Contact Number",
+    "GuardianNAme",
+    "D.O.B",
+    "AADHAR NUMBER",
+    "FELLOW QUALIFICATION",
+    "GENDER",
+    "NO oF STUDENT",
+    "TEACHER BASELINE STATUS	",
+    "TEACHER BASELINE MARK	",
+    "TEACHER ENDLINE STATUS	",
+    "TEACHER ENDLINE MARK",
+  ];
+
+  const getCellValue = (row, column, index) => {
+    switch (column) {
+      case "Serial No":
+        return index + 1;
+      case "Manager Name":
+        return row.managername;
+      case "User Name":
+        return row.username;
+      case "User Id":
+        return row.userid;
+      case "User Type":
+        return row.usertype;
+      case "Reg-Date":
+        return moment(row.createdon).format(" DD MM YYYY");
+      case "Status":
+        return row.status;
+      case "Contact Number":
+        return row.contactnumber;
+      case "GuardianNAme":
+        return row.usertype;
+      case "D.O.B":
+        return row.usertype;
+      case "AADHAR NUMBER":
+        return row.usertype;
+      case "FELLOW QUALIFICATION":
+        return row.usertype;
+      case "GENDER":
+        return row.gender;
+      case "NO oF STUDENT":
+        return row.students;
+      case "TEACHER BASELINE STATUS":
+        return row.userid;
+      case "TEACHER BASELINE MARK":
+        return row.userid;
+      case "TEACHER ENDLINE STATUS":
+        return row.userid;
+      case "TEACHER ENDLINE MARK":
+        return row.userid;
+      default:
+        return "";
+    }
+  };
+
   const fileName = "fellow";
 
   const xlData = data.map((x) => {
-    console.log("x-->", x);
     const { userid, username, ...exceptBoth } = x;
     return exceptBoth;
   });
-
   return (
     <>
-      <div>
+      {/* Filter section */}
+      <div
+        style={{
+          boxShadow:
+            "rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px",
+        }}
+      >
         <div
           style={{
             marginTop: "20px",
             padding: "30px 20px",
             display: "grid",
             gap: "20px",
+
             gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
           }}
         >
-          <Text
-            name="Select year"
-            currencies={year}
-            handleChange={handleYearChange}
-          />
-          <Text
-            name="Select manager"
-            currencies={managerSet}
-            handleChange={handleManagerChange}
-          />
+          <Select1 selectedYear={selectedYear} onChange={handleYearChange} />
           <Text
             name="Select manager-type"
             currencies={managerTypeSet}
             handleChange={handleManagerTypeChange}
           />
-          <Text
-            name="Select passcode"
-            currencies={passcodeSet}
-            handleChange={handlePasscodeChange}
-          />
+
+          <TextField
+            id="outlined-select-currency"
+            select
+            label="Select manager"
+            defaultValue="none"
+            value={managerName}
+            onChange={(e) => handleManagerChange(e)}
+          >
+            {managerArr.map((option, index) => (
+              <MenuItem key={index + 1} value={option.managerid}>
+                {option.managername}
+              </MenuItem>
+            ))}
+          </TextField>
+
+      
+
+              <ReusableTextField
+        label="Select passcode"
+        value={passcode}
+        options={passcodeArray}
+        onChange={handlePasscodeChange}
+      />
+
           <Stack spacing={2} direction="row">
             <Button
               variant="contained"
@@ -229,106 +228,44 @@ const Fellows = () => {
             </Button>
           </Stack>
         </div>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "20px",
-          padding: "20px",
-        }}
-      >
-        <Number Name="Number of Active Fellows" count={34} />
-        <Number Name="Number of Students" count={467} />
-        <Number Name="Number of atudents baceline" count={84} />
-        <Number Name="Number of Drop-out" count={468} />
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "20px",
+            padding: "20px",
+          }}
+        >
+          <Number Name="Number of Active Fellows" count={34} />
+          <Number Name="Number of Students" count={467} />
+          <Number Name="Number of students baseline" count={84} />
+          <Number Name="Number of Drop-out" count={468} />
+        </div>
       </div>
 
-      {data && data.length > 0 && (
-        <div style={{ padding: "30px 20px", width: "100%" }}>
-          <TableContainer
-            component={Paper}
-            sx={{
-              marginTop: 3,
-              width: "100%",
-              borderRadius: "6px",
-              maxHeight: "800px",
-            }}
-          >
-            <Table aria-label="customized table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>Serial No</StyledTableCell>
-                  <StyledTableCell align="right">Manager Name</StyledTableCell>
-                  <StyledTableCell align="right">User Name</StyledTableCell>
-                  <StyledTableCell align="right">User Id</StyledTableCell>
-                  <StyledTableCell align="right">User Type</StyledTableCell>
-                  <StyledTableCell align="right">Reg-Date</StyledTableCell>
-                  <StyledTableCell align="right">Status</StyledTableCell>
-                  <StyledTableCell align="right">Contact No</StyledTableCell>
-                  <StyledTableCell align="right">Guardian Name</StyledTableCell>
-                  <StyledTableCell align="right">D.O.B</StyledTableCell>
-                  <StyledTableCell align="right">AADHAR NO</StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => (
-                    <StyledTableRow>
-                      <StyledTableCell component="th" scope="row">
-                        {index + 1}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.managername}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.username}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.userid}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.usertype}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.createdon}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.status}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.contactnumber}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.guardianname}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">{row.dob}</StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.aadhaar}
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))}
-              </TableBody>
-            </Table>
-            <TablePagination
-              component="div"
-              count={totalDataLength}
+      {/* Display data */}
+      {loaded && (
+        <>
+          {data && data.length > 0 ? (
+            <Fields
+              data={data}
+              totalDataLength={totalDataLength}
               page={page}
-              onPageChange={handleChangePage}
               rowsPerPage={rowsPerPage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
+              handleChangePage={handleChangePage}
+              handleChangeRowsPerPage={handleChangeRowsPerPage}
+              xlData={xlData}
+              fileName={fileName}
+              columns={columns}
+              getCellValue={getCellValue}
             />
-          </TableContainer>
-        </div>
+          ) : (
+            <Logo />
+          )}
+        </>
       )}
 
-      {data && data.length > 0 ? null : <Logo />}
-
       <Links />
-
-      {/* <ExportCsv csvData={xlData} fileName={fileName} /> */}
-      <ExportCsv/>
     </>
   );
 };

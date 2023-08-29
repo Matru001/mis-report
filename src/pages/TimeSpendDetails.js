@@ -1,19 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Text from "../components/Text";
-import TablePagination from "@mui/material/TablePagination";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Logo from "../components/Logo";
 import Links from "../components/Links";
 import Api from "../envirment/Api";
-import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import ReusableTextField from "../components/ReusableTextField";
+import MenuItem from "@mui/material/MenuItem";
+import Select1 from "../components/Select1";
+
+import Fields from "../components/Fields";
 
 const selectManager = [
   {
@@ -131,43 +128,43 @@ const year = [
   },
 ];
 
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#5e72e4",
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
-
 const TimeSpendDetails = () => {
-  const [selectedYear, setSelectedYear] = useState("");
-  const [manager, setManager] = useState("");
+  const [selectedYear, setSelectedYear] = useState();
+  console.log("selectedYear---->", selectedYear);
+  const [managerName, setManagerName] = useState("");
+  const [managerType, setManagerType] = useState("");
   const [passcode, setPasscode] = useState("");
   const [month, setMonth] = useState("");
-    const [page, setPage] = React.useState(0);
-    const [totalDataLength, setTotalDataLength] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [user, setUser] = useState([]);
+  const [page, setPage] = React.useState(0);
+  const [totalDataLength, setTotalDataLength] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [data, setData] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [managerArr, setManagerArr] = useState([]);
 
-  const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
+  useEffect(() => {
+    Api.get(`getManagerIdsWidPasscode`).then((response) => {
+      setManagerArr(response.data.resData);
+    });
+  }, []);
+
+  let passcodeArray = [];
+
+  managerArr?.filter((element) => {
+    // console.log("x--->", element, managerName);
+    if (element.managerid === managerName) {
+      console.log("x--->", managerName, element);
+      passcodeArray = element.passcodes;
+      console.log("passcodeArray--->", passcodeArray);
+    }
+  });
+
+  const handleYearChange = (selectedYear) => {
+    setSelectedYear(selectedYear);
   };
 
   const handleManagerChange = (event) => {
-    setManager(event.target.value);
+    setManagerName(event.target.value);
   };
 
   const handlePasscodeChange = (event) => {
@@ -176,8 +173,14 @@ const TimeSpendDetails = () => {
   const handleMonthChange = (event) => {
     setMonth(event.target.value);
   };
+  const handleManagerTypeChange = (event) => {
+    setManagerType(event.target.value);
+  };
 
   const getTimeSpentReportManagerwise = async () => {
+    if (selectedYear === "" || managerName === "" || passcode === "") {
+      return alert("Plz.. select a Filter");
+    }
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -186,26 +189,28 @@ const TimeSpendDetails = () => {
 
     const body = {
       year: selectedYear,
-      managerid: manager,
+      managerid: managerName,
       passcode: passcode,
     };
-  
-    try {
-      const res = await Api.post(
-        `getTimeSpentReportManagerwise`,
-        body,
-        config
-      );
-      if (res.status === 200) {
-        setUser(res.data);
-        setTotalDataLength(res.data.length);
-      
-      }
-    } catch (error) {}
-  };
- 
 
-  const handleChangePage = (newPage) => {
+    console.log("body--->", body);
+    setLoaded(false);
+    try {
+      const res = await Api.post(`getTimeSpentReportManagerwise`, body, config);
+
+      console.log("res------>", res);
+
+      if (res.status === 200) {
+        setData(res.data);
+        setTotalDataLength(res.data.length);
+        setLoaded(true);
+      }
+    } catch (error) {
+      setLoaded(true);
+    }
+  };
+
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
@@ -213,6 +218,56 @@ const TimeSpendDetails = () => {
     setRowsPerPage(event.target.value);
     setPage(0);
   };
+
+  const columns = [
+    "Serial No",
+    "Year",
+    "Month",
+    "UserName",
+    "PPT",
+    "Training",
+    "Pgeactivity",
+    "Eceactivity",
+    "FLN",
+    "Reading",
+    "TotalTime",
+  ];
+
+  const getCellValue = (row, column, index) => {
+    switch (column) {
+      case "Serial No":
+        return index + 1;
+      case "Year":
+        return row.year;
+      case "Month":
+        return row.month;
+      case "UserName":
+        return row.username;
+      case "PPT":
+        return row.ppt;
+      case "Training":
+        return row.training;
+      case "Pgeactivity":
+        return row.pgeactivity;
+      case "Eceactivity":
+        return row.eceactivity;
+      case "FLN":
+        return row.fln;
+      case "Reading":
+        return row.reading;
+      case "TotalTime":
+        return row.totalTime;
+      default:
+        return "";
+    }
+  };
+  const fileName = "fellow";
+
+  const xlData = data.map((x) => {
+    const { userid, username, ...exceptBoth } = x;
+    return exceptBoth;
+  });
+
   return (
     <>
       <div
@@ -226,22 +281,39 @@ const TimeSpendDetails = () => {
           gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
         }}
       >
-        <Text
+        <Select1 selectedYear={selectedYear} onChange={handleYearChange} />
+        {/* <Text
           name="Select year"
           currencies={year}
           handleChange={handleYearChange}
-        />
+        /> */}
         <Text
-          name="Select manager"
-          currencies={selectManager}
-          handleChange={handleManagerChange}
+          name="Select managerType"
+          currencies={selectManagerType}
+          handleChange={handleManagerTypeChange}
+        />
+        <TextField
+          id="outlined-select-currency"
+          select
+          label="Select manager"
+          defaultValue="none"
+          value={managerName}
+          onChange={(e) => handleManagerChange(e)}
+        >
+          {managerArr.map((option, index) => (
+            <MenuItem key={index + 1} value={option.managerid}>
+              {option.managername}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <ReusableTextField
+          label="Select passcode"
+          value={passcode}
+          options={passcodeArray}
+          onChange={handlePasscodeChange}
         />
 
-        <Text
-          name="Select passcode"
-          currencies={passcodeArray}
-          handleChange={handlePasscodeChange}
-        />
         <Text
           name="Select month"
           currencies={monthArray}
@@ -258,84 +330,27 @@ const TimeSpendDetails = () => {
           </Button>
         </Stack>
       </div>
-
-      <div style={{ flexWrap: "wrap" }}>
-        {user && user.length > 0 && (
-          <div>
-            <TableContainer component={Paper}>
-              <Table
-                sx={{ minWidth: 70, marginTop: 3 }}
-                aria-label="customized table"
-              >
-                <TableHead>
-                  <TableRow>
-                    <StyledTableCell>Serial No</StyledTableCell>
-                    <StyledTableCell align="right">PPT</StyledTableCell>
-                    <StyledTableCell align="right">Training</StyledTableCell>
-                    <StyledTableCell align="right">Pgeactivity</StyledTableCell>
-                    <StyledTableCell align="right">Eceactivity</StyledTableCell>
-                    <StyledTableCell align="right">FLN</StyledTableCell>
-                    <StyledTableCell align="right">Reading</StyledTableCell>
-                    <StyledTableCell align="right">TotalTime</StyledTableCell>
-                    <StyledTableCell align="right">Training</StyledTableCell>
-                    <StyledTableCell align="right">UserName</StyledTableCell>
-                    <StyledTableCell align="right">Year</StyledTableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {user
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => (
-                    <StyledTableRow>
-                      <StyledTableCell component="th" scope="row">
-                        {index + 1}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">{row.ppt}</StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.training}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.pgeactivity}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.eceactivity}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">{row.fln}</StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.reading}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.totalTime}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.training}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.username}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.year}
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))}
-                </TableBody>
-              </Table>
-           
-              <TablePagination
-                component="div"
-                count={totalDataLength}
-                page={page}
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </TableContainer>
-          </div>
-        )}
-        {/* <Logo /> */}
-
-        <Links />
-      </div>
+      {loaded && (
+        <>
+          {data && data.length > 0 ? (
+            <Fields
+              data={data}
+              totalDataLength={totalDataLength}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              handleChangePage={handleChangePage}
+              handleChangeRowsPerPage={handleChangeRowsPerPage}
+              xlData={xlData}
+              fileName={fileName}
+              columns={columns}
+              getCellValue={getCellValue}
+            />
+          ) : (
+            <Logo />
+          )}
+        </>
+      )}
+      <Links />
     </>
   );
 };

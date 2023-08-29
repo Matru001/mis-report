@@ -8,5 +8,4 @@ const Anganbadi = () => {
     </div>
   )
 }
-
 export default Anganbadi

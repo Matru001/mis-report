@@ -105,7 +105,7 @@ export default function Profile () {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
+        {/* <MenuItem onClick={handleClose}>
           <Avatar /> Profile
         </MenuItem>
         <MenuItem onClick={handleClose}>
@@ -117,13 +117,13 @@ export default function Profile () {
             <PersonAdd fontSize="small" />
           </ListItemIcon>
           Add another account
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
+        </MenuItem> */}
+        {/* <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
           Settings
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem onClick={handleNavigate}>
           <ListItemIcon>
             <Logout fontSize="small" />

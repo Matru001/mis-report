@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="daca9d20-08b0-4efa-9663-9f57b894651f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Fields.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Fields.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Filter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Filter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Links.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Links.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Number.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Number.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Number.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Profile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Select1.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Select1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Select2.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Text.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Text.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/card.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/card.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/code.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/downloads/ExportCsv.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/downloads/ExportCsv.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Anganbadi.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Anganbadi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Dashboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Feedback.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Feedback.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Fellows.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Fellows.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Fln.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Fln.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Login.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/NsdcStatus.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/NsdcStatus.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/PgeStudents.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PgeStudents.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/PromotedStudent.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PromotedStudent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/TimeSpendDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/TimeSpendDetails.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/TrainingDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/TrainingDetails.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="2UeCyXLerTw3THJ4aaZKKeZQfs9" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="daca9d20-08b0-4efa-9663-9f57b894651f" name="Changes" comment="" />
+      <created>1693290917942</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1693290917942</updated>
+    </task>
+    <servers />
+  </component>
+</project>

@@ -1,17 +1,22 @@
+
+
 import React from "react";
 
 import * as FileSaver from "file-saver";
 
 import * as XLSX from "xlsx";
 
+//Material UI Import
+import Tooltip from "@mui/material/Tooltip";
+import { Button } from "@mui/material";
 
-const ExportCsv = ({ csvData, fileName }) => {
+export const ExportCSV = ({ csvData, fileName }) => {
   const fileType =
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
 
   const fileExtension = ".xlsx";
 
-  const exportToCSV = ({ csvData, fileName }) => {
+  const handleExportToCSV = () => {
     const ws = XLSX.utils.json_to_sheet(csvData);
 
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
@@ -24,10 +29,24 @@ const ExportCsv = ({ csvData, fileName }) => {
   };
 
   return (
-    <button onClick={(e) => exportToCSV({ csvData, fileName })}>
-      Download Report
-    </button>
+    <Tooltip title="Download data in excel" arrow>
+      <Button
+        onClick={handleExportToCSV}
+        style={{
+          backgroundColor: "#5e72e4",
+          borderColor: "#5e72e4",
+          color: "#fff",
+          margin: "10px",
+          display: "flex",
+        
+          
+          
+        }}
+      >
+        Download Report
+      </Button>
+    </Tooltip>
   );
 };
 
-export default ExportCsv;
+export default ExportCSV;

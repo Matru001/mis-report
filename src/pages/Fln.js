@@ -1,40 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Select from "../components/Select1";
+import Select1 from "../components/Select1";
 import Text from "../components/Text";
 import Filter from "../components/Filter";
-import { TextField } from "@mui/material";
-import Button from "@mui/material/Button";
+// import { TextField } from "@mui/material";
 import Logo from "../components/Logo";
 import Links from "../components/Links";
 import Api from "../envirment/Api";
-import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import TablePagination from "@mui/material/TablePagination";
+import Fields from "../components/Fields";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import ReusableTextField from "../components/ReusableTextField";
 
-const managerIdSet = [
-  {
-    value: "guru@thinkzone.in",
-    label: "guru@thinkzone.in",
-  },
-  {
-    value: "matruprasad530@gmil.com",
-    label: "matruprasad530@gmil.com",
-  },
-  {
-    value: "rajesh530@gmil.com",
-    label: "rajesh530@gmil.com",
-  },
-  {
-    value: "aman530@gmil.com",
-    label: "aman530@gmil.com",
-  },
-];
+
 
 const managerTypeSet = [
   {
@@ -55,24 +32,7 @@ const managerTypeSet = [
   },
 ];
 
-const passcodeSet = [
-  {
-    value: "Matru@123",
-    label: "Matru@123",
-  },
-  {
-    value: "GURUBBS0323",
-    label: "GURUBBS0323",
-  },
-  {
-    value: "rajesh@123",
-    label: "rajesh@123",
-  },
-  {
-    value: "smruti@123",
-    label: "smruti@123",
-  },
-];
+
 
 const FilterSet = [
   {
@@ -80,60 +40,40 @@ const FilterSet = [
     label: "filter",
   },
 ];
-
-const year = [
-  {
-    value: "2023",
-    label: "2023",
-  },
-  {
-    value: "2022",
-    label: "2022",
-  },
-  {
-    value: "2024",
-    label: "2024",
-  },
-  {
-    value: "2025",
-    label: "2025",
-  },
-];
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#5e72e4",
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
-
 const Fln = () => {
-  const [mine,setMine] = useState([])
-  const [user, setUser] = useState([]);
-  const [managerId, setManagerId] = useState("");
+  // const [mine,setMine] = useState([])
+  const [data, setData] = useState([]);
+  const [managerName, setManagerName] = useState("");
   const [managerType, setManagerType] = useState("");
   const [passcode, setPasscode] = useState("");
   const [filter, setFilter] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
     const [page, setPage] = React.useState(0);
     const [totalDataLength, setTotalDataLength] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [loaded, setLoaded] = useState(false);
+  const [managerArr, setManagerArr] = useState([]);
 
-  const handleManagerIdChange = (event) => {
-    setManagerId(event.target.value);
+
+ useEffect(() => {
+   Api.get(`getManagerIdsWidPasscode`).then((response) => {
+     setManagerArr(response.data.resData);
+   });
+ }, []);
+
+ let passcodeArray = [];
+
+ managerArr?.filter((element) => {
+   // console.log("x--->", element, managerName);
+   if (element.managerid === managerName) {
+     console.log("x--->", managerName, element);
+     passcodeArray = element.passcodes;
+     console.log("passcodeArray--->", passcodeArray);
+   }
+ });
+
+  const handleManagerChange = (event) => {
+    setManagerName(event.target.value);
   };
 
   const handleManagerTypeChange = (event) => {
@@ -147,12 +87,12 @@ const Fln = () => {
     setFilter(event.target.value);
   };
 
-  const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
+  const handleYearChange = (selectedYear) => {
+    setSelectedYear(selectedYear);
   };
 
   const getflnassessdetails = async () => {
-    if (selectedYear === "" || filter === "" || passcode === "") {
+    if (selectedYear === "" || filter === "" || passcode === "" ) {
       return alert("please select value")
     }
     const config = {
@@ -165,17 +105,19 @@ const Fln = () => {
       year: selectedYear,
       flag: filter,
       passcode: passcode,
-      managerid: managerId,
+      managerid: managerName,
     };
-
+ setLoaded(false);
     try {
       const res = await Api.post("getflnassessdetails", body, config);
       if (res.status === 200) {
-        setUser(res.data.data);
-          setTotalDataLength(res.data.data.length);
+        setData(res.data.data);
+        setTotalDataLength(res.data.data.length);
+         setLoaded(true);
       } // Update the user state with the data from the API response
       console.log("response---->", res.data.data); // Log the response data
     } catch (error) {
+       setLoaded(true);
       console.log(error);
     }
   };
@@ -210,6 +152,58 @@ const Fln = () => {
     setRowsPerPage(event.target.value);
     setPage(0);
   };
+
+   const columns = [
+     "Serial No",
+     "Manager Id",
+     "User Id",
+     "User Name",
+     "Student Id",
+     "Student Name",
+     "Student Status",
+     "Class",
+     "Baceline math Mark",
+     "BaceLineEnglish Marks",
+     "BaceLineOdiaMarks",
+     
+   ];
+
+   const getCellValue = (row, column, index) => {
+     switch (column) {
+       case "Serial No":
+         return index + 1;
+       case "Manager Id":
+         return row.managerid;
+       case "User Id":
+         return row.userid;
+       case "User Name":
+         return row.username;
+       case "Student Id":
+         return row.studentid;
+       case "Student Name":
+         return row.studentname;
+       case "Student Status":
+         return row.studentstatus;
+       case "Class":
+         return row.class;
+       case "Baceline math Mark":
+         return row.baselineMathsMarks;
+       case "BaceLineEnglish Marks":
+         return row.baselineEnglishMarks;
+       case "BaceLineOdiaMarks":
+         return row.baselineOdiaMarks;
+       
+       default:
+         return "";
+     }
+  };
+  
+   const fileName = "fellow";
+
+   const xlData = data.map((x) => {
+     const { userid, username, ...exceptBoth } = x;
+     return exceptBoth;
+   });
   
   
 
@@ -221,28 +215,37 @@ const Fln = () => {
           padding: "30px 20px",
           display: "grid",
           gap: "20px",
+          boxShadow:
+            "rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px",
           gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
         }}
       >
-        <Text
-          name="Select managerId"
-          currencies={managerIdSet}
-          handleChange={handleManagerIdChange}
-        />
-        <Text
-          name="Select year"
-          currencies={year}
-          handleChange={handleYearChange}
-        />
+        <Select1 selectedYear={selectedYear} onChange={handleYearChange} />
         <Text
           name="Select manager-type"
           currencies={managerTypeSet}
           handleChange={handleManagerTypeChange}
         />
-        <Text
-          name="Select passcode"
-          currencies={passcodeSet}
-          handleChange={handlePasscodeChange}
+        <TextField
+          id="outlined-select-currency"
+          select
+          label="Select manager"
+          defaultValue="none"
+          value={managerName}
+          onChange={(e) => handleManagerChange(e)}
+        >
+          {managerArr.map((option, index) => (
+            <MenuItem key={index + 1} value={option.managerid}>
+              {option.managername}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <ReusableTextField
+          label="Select passcode"
+          value={passcode}
+          options={passcodeArray}
+          onChange={handlePasscodeChange}
         />
         <Text
           name="FIlter"
@@ -256,104 +259,47 @@ const Fln = () => {
         />
       </div>
 
-      <div style={{ marginTop: 20, marginLeft: 10, display: "flex" }}>
+      {/* <div
+        style={{
+          marginTop: 20,
+          marginLeft: 10,
+          display: "flex",
+          boxShadow:
+            "rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, rgba(0, 0, 0, 0.12) 0px 1px 3px 0px",
+        }}
+      >
         <TextField
           id="outlined-basic"
           label="Search Fellow"
           variant="outlined"
-          style={{ width: "1000px",  }}
+          style={{ width: "1000px" }}
         />
         <Filter
           details="Search"
           // handleClick={falnassesdetails}
           style={{ background: "#8261DA" }}
         />
-      </div>
-      {user && user.length > 0 && (
-        <div>
-          <TableContainer component={Paper}>
-            <Table
-              sx={{ minWidth: 70, marginTop: 3 }}
-              aria-label="customized table"
-            >
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>Serial No</StyledTableCell>
-                  <StyledTableCell align="right">Manager Id</StyledTableCell>
-                  <StyledTableCell align="right">User ID</StyledTableCell>
-                  <StyledTableCell align="right">User Name</StyledTableCell>
-                  <StyledTableCell align="right">Student Id</StyledTableCell>
-                  <StyledTableCell align="right">Student name</StyledTableCell>
-                  <StyledTableCell align="right">
-                    Student Status
-                  </StyledTableCell>
-                  <StyledTableCell align="right"> Class</StyledTableCell>
-                  <StyledTableCell align="right">
-                    BaselineMathsMarks
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    BaselineEnglishMarks
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    BaselineOdiaMarks
-                  </StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {user
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => (
-                    <StyledTableRow key={index}>
-                      <StyledTableCell component="th" scope="row">
-                        {index + 1}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.managerid}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.userid}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.username}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.studentid}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.studentname}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.studentstatus}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.class}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.baselineMathsMarks}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.baselineEnglishMarks}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {row.baselineOdiaMarks}
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))}
-              </TableBody>
-            </Table>
-            <TablePagination
-              component="div"
-              count={totalDataLength}
+      </div> */}
+      {loaded && (
+        <>
+          {data && data.length > 0 ? (
+            <Fields
+              data={data}
+              totalDataLength={totalDataLength}
               page={page}
-              onPageChange={handleChangePage}
               rowsPerPage={rowsPerPage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
+              handleChangePage={handleChangePage}
+              handleChangeRowsPerPage={handleChangeRowsPerPage}
+              xlData={xlData}
+              fileName={fileName}
+              columns={columns}
+              getCellValue={getCellValue}
             />
-          </TableContainer>
-        </div>
+          ) : (
+            <Logo />
+          )}
+        </>
       )}
-
-      {/* <Logo /> */}
       <Links />
     </>
   );
